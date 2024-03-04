@@ -1,0 +1,12 @@
+version: '3'
+
+tasks:
+  run:
+    cmds:
+      - go run ./cmd/generate
+      - go run ./cmd/server
+
+  # Ironically the task runner is itself a dev dependency of the project.
+  # To install it run the following command:
+  #
+  # go install github.com/go-task/task/v3/cmd/task@latest

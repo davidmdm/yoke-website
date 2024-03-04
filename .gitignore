@@ -1,0 +1,8 @@
+.idea
+.vscode
+
+*.out
+
+test_output
+
+cmd/server/content

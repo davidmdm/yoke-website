@@ -1,0 +1,110 @@
+*,
+*:before,
+*:after {
+  box-sizing: border-box;
+}
+
+main {
+  width: 100%;
+}
+
+/* Set a modern background color and font for the entire page */
+body {
+  font-family: Arial, sans-serif;
+  background-color: #c37e7e;
+  color: #333;
+  margin: 0.5em 0em;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+main {
+  margin-bottom: 5em;
+}
+
+footer {
+  position: fixed;
+  bottom: 0;
+
+  margin-top: 2em;
+  background-color: #797878;
+  color: #fff;
+  text-align: center;
+  padding: 20px;
+  width: 100%;
+}
+
+div,
+section {
+  width: 100%;
+}
+
+/* Style the header text (e.g., site title) */
+h1 {
+  font-size: 2.5rem;
+  color: #6ad7e5;
+  /* Blue color for the header */
+  text-align: center;
+}
+
+/* Style links */
+a {
+  color: #0073e6;
+  /* Blue color for links */
+  text-decoration: none;
+  transition: color 0.3s ease;
+  /* Smooth transition for link color */
+}
+
+a:hover {
+  color: #ff6600;
+  /* Orange color when hovering over links */
+}
+
+/* Style paragraphs */
+p {
+  font-size: 1.1rem;
+  line-height: 1.5;
+  margin: 20px 0;
+  padding: 0 20px;
+  text-align: justify;
+}
+
+/* Add some spacing between paragraphs */
+p + p {
+  margin-top: 10px;
+}
+
+/* Add a modern container for your content */
+.container {
+  border-radius: 20px;
+  max-width: 80%;
+  min-width: 400px;
+  margin: 2em auto;
+  padding: 20px;
+  background-color: #fff;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+ul li {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+  background-color: #f4f4f4;
+  border-radius: 10px;
+  padding: 0px 10px;
+  border: 2px solid black;
+}
+
+ul li::before {
+  font-size: 2em;
+  content: "\261E"; /* Use a fun Unicode character as a bullet */
+  margin-right: 10px;
+}
