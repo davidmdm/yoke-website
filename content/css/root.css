@@ -11,9 +11,8 @@ main {
 /* Set a modern background color and font for the entire page */
 body {
   font-family: Arial, sans-serif;
-  background-color: #c37e7e;
-  color: #333;
-  margin: 0.5em 0em;
+  background-color: #1a1d4e;
+  color: #ece9e9;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -21,7 +20,7 @@ body {
 }
 
 main {
-  margin-bottom: 5em;
+  margin: 1em 2.5em;
 }
 
 footer {
@@ -29,7 +28,7 @@ footer {
   bottom: 0;
 
   margin-top: 2em;
-  background-color: #797878;
+  background-color: #191919;
   color: #fff;
   text-align: center;
   padding: 20px;
@@ -46,7 +45,8 @@ h1 {
   font-size: 2.5rem;
   color: #6ad7e5;
   /* Blue color for the header */
-  text-align: center;
+  text-align: left;
+  margin: 0 2.5em;
 }
 
 /* Style links */
@@ -69,7 +69,7 @@ p {
   line-height: 1.5;
   margin: 20px 0;
   padding: 0 20px;
-  text-align: justify;
+  text-align: left;
 }
 
 /* Add some spacing between paragraphs */
@@ -79,12 +79,14 @@ p + p {
 
 /* Add a modern container for your content */
 .container {
-  border-radius: 20px;
+  border-radius: 12px;
+  justify-content: left;
   max-width: 80%;
   min-width: 400px;
   margin: 2em auto;
   padding: 20px;
-  background-color: #fff;
+  background-color: #fbaf51;
+  color: black;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
@@ -105,6 +107,6 @@ ul li {
 
 ul li::before {
   font-size: 2em;
-  content: "\261E"; /* Use a fun Unicode character as a bullet */
+  content: '\261E'; /* Use a fun Unicode character as a bullet */
   margin-right: 10px;
 }

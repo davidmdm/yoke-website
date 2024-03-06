@@ -1,9 +1,31 @@
-<h1 id="welcome-header">
-  Yoke: The Kkubernetes Infrastructure as Code Package Deployer
-</h1>
+<h1 id="welcome-header">Yoke: The Kubernetes Infrastructure as Code Package Deployer</h1>
 
-<section class="container">What is yoke?</section>
+<section class="container">
+  <h2>What is Yoke?</h2>
+  <p>
+    Yoke is a Kubernetes package manager that facilitates the downloading and deployment of packages to Kubernetes. The
+    primary distinction between Yoke and other Kubernetes package managers, such as Helm and Timoni, lies in how Yoke
+    describes Flights (Flights are to Yoke what Charts are to Helm). Unlike Helm and Timoni, where Packages are defined
+    using YAML, CUE, or another configuration language, Yoke utilizes general-purpose code.
+  </p>
+</section>
 
-<section class="container">Why yoke?</section>
+<section class="container">
+  <h2>Why Yoke?</h2>
+  <p>
+    As the DevOps ecosystem transitions from a focus on DevOps to platform engineering, our tools for interfacing with
+    Kubernetes (K8s) must evolve accordingly. Describing Kubernetes resources through text templates represents the
+    minimum standard we have set. However, it is evident that this approach is not tailored for software engineers. It
+    lacks essential features such as proper type safety, compiler guarantees, validation, testing, autocompletion, and
+    consistent IDE support.
+  </p>
+  <p>
+    The crucial observation to note is that Kubernetes (K8s) resources differ fundamentally from web pages or emails.
+    So, why do we use templates as if they were? These files represent diverse APIs supported by Kubernetes; in essence,
+    they are structured data. The most effective tools for handling structured data are programming languages.
+  </p>
+</section>
 
-<section class="container">Getting started</section>
+<section class="container">
+  <h2>Getting started</h2>
+</section>
