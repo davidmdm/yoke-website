@@ -1,14 +1,4 @@
-<h1 id="welcome-header">Yoke: The Kubernetes Infrastructure as Code Package Deployer</h1>
-
-<section class="container">
-  <h2>What is Yoke?</h2>
-  <p>
-    Yoke is a Kubernetes package manager that facilitates the downloading and deployment of packages to Kubernetes. The
-    primary distinction between Yoke and other Kubernetes package managers, such as Helm and Timoni, lies in how Yoke
-    describes Flights (Flights are to Yoke what Charts are to Helm). Unlike Helm and Timoni, where Packages are defined
-    using YAML, CUE, or another configuration language, Yoke utilizes general-purpose code.
-  </p>
-</section>
+<h1 id="welcome-header">Yoke: The Infrastructure as Code (IaC) Package Manager for Kubernetes</h1>
 
 <section class="container">
   <h2>Why Yoke?</h2>
@@ -23,6 +13,26 @@
     The crucial observation to note is that Kubernetes (K8s) resources differ fundamentally from web pages or emails.
     So, why do we use templates as if they were? These files represent diverse APIs supported by Kubernetes; in essence,
     they are structured data. The most effective tools for handling structured data are programming languages.
+  </p>
+</section>
+
+<section class="container">
+  <h2>What is Yoke?</h2>
+  <p>
+    Yoke is a Kubernetes package manager that facilitates the downloading and deployment of packages to Kubernetes. The
+    primary distinction between Yoke and other Kubernetes package managers, such as Helm and Timoni, lies in how Yoke
+    describes Flights (Flights are to Yoke what Charts are to Helm). Unlike Helm and Timoni, where Packages are defined
+    using YAML, CUE, or another configuration language, Yoke utilizes general-purpose code.
+  </p>
+  <p>
+    Packages or Flights are programs that generate the desired Kubernetes resources in either JSON or YAML format and
+    output them to stdout. Flights are typically packaged as WebAssembly (wasm) executables, with Yoke embedding Wazero,
+    a zero-dependency wasm runtime for Go, to execute these programs. Creating reusable building blocks for Yoke is akin
+    to writing functions or libraries. These components can be distributed and versioned using the respective language's
+    ecosystem package manager, such as npm, cargo, or Go modules. Any language that compiles to wasm enjoys first-class
+    support in Yoke. If your chosen language does not compile to wasm, you can still invoke the program and pipe the
+    output directly to Yoke. However, this approach comes with certain drawbacks, including potential issues related to
+    portability and security.
   </p>
 </section>
 
