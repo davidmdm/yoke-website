@@ -1,9 +1,13 @@
 package main
 
 import (
+	"errors"
 	"fmt"
 	"io"
+	"mime"
 	"net/http"
+	"os"
+	"path"
 	"strings"
 	"time"
 
@@ -25,9 +29,22 @@ func Handler() http.Handler {
 	})
 
 	mux.HandleFunc("GET /content/", func() http.HandlerFunc {
-		contentFS := http.FileServer(http.FS(content))
 		return func(w http.ResponseWriter, r *http.Request) {
-			contentFS.ServeHTTP(&pageWriter{ResponseWriter: w}, r)
+			w.Header().Set("Content-Type", mime.TypeByExtension(path.Ext(r.URL.Path)))
+
+			content, err := content.ReadFile(r.URL.Path[1:])
+			if err != nil {
+				if errors.Is(err, os.ErrNotExist) {
+					w.WriteHeader(404)
+					w.Write(knownPages.NotFound)
+				} else {
+					w.WriteHeader(500)
+					w.Write(knownPages.InternalError)
+				}
+				return
+			}
+
+			w.Write(content)
 		}
 	}())
 
@@ -93,6 +110,7 @@ func (w *pageWriter) Write(data []byte) (int, error) {
 	if !w.written && (w.code == 404 || w.code == 500) {
 		switch w.code {
 		case 404:
+			w.Header().Set("Content-Type", "text/html")
 			w.ResponseWriter.Write(knownPages.NotFound)
 		case 500:
 			w.ResponseWriter.Write(knownPages.InternalError)

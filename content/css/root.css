@@ -1,66 +1,51 @@
 *,
-*:before,
-*:after {
+*::before,
+*::after {
   box-sizing: border-box;
-}
-
-main {
-  width: 100%;
 }
 
 /* Set a modern background color and font for the entire page */
 body {
+  --text-color: #ece9e9;
+  --pop-color: #6ad7e5;
+  --background--color: #070936;
+
   font-family: Arial, sans-serif;
-  background-color: #1a1d4e;
-  color: #ece9e9;
+
+  background-color: var(--background--color);
+  color: var(--text-color);
+
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
 }
 
-main {
-  margin: 1em 2.5em;
-}
-
-footer {
-  position: fixed;
-  bottom: 0;
-
-  margin-top: 2em;
-  background-color: #191919;
-  color: #fff;
-  text-align: center;
-  padding: 20px;
-  width: 100%;
-}
-
+main,
 div,
 section {
   width: 100%;
 }
 
-/* Style the header text (e.g., site title) */
+main {
+  margin: 1em 2.5em;
+}
+
 h1 {
   font-size: 2.5rem;
-  color: #6ad7e5;
-  /* Blue color for the header */
+  color: var(--pop-color);
   text-align: left;
   margin: 0 3.5em;
 }
 
-/* Style links */
 a {
-  color: #0073e6;
-  /* Blue color for links */
+  color: var(--pop-color);
   text-decoration: none;
   transition: color 0.3s ease;
-  /* Smooth transition for link color */
 }
 
 a:hover {
-  color: #ff6600;
-  /* Orange color when hovering over links */
+  color: #ff6600d4;
 }
 
 /* Style paragraphs */
@@ -90,23 +75,85 @@ p + p {
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
-ul {
-  list-style-type: none;
-  padding: 0;
+:root {
+  --bar-width: 30px;
+  --bar-height: 3px;
+  --hamburger-gap: 6px;
+  --hamburger-margin: 0.5em;
+  --hamburger-height: calc(3 * var(--bar-height) + 2 * var(--hamburger-gap));
+  --animation-timing: 200ms ease-in-out;
 }
 
-ul li {
+.hamburger-menu {
+  --x-width: calc(var(--hamburger-height) * 1.41421356237);
+
+  position: fixed;
+  top: var(--hamburger-margin);
+  left: var(--hamburger-margin);
+
+  width: max-content;
+  z-index: 5;
   display: flex;
-  align-items: center;
-  margin-bottom: 10px;
-  background-color: #f4f4f4;
-  border-radius: 10px;
-  padding: 0px 10px;
-  border: 2px solid black;
+  flex-direction: column;
+  gap: var(--hamburger-gap);
+  cursor: pointer;
 }
 
-ul li::before {
-  font-size: 2em;
-  content: "\261E"; /* Use a fun Unicode character as a bullet */
-  margin-right: 10px;
+.hamburger-menu::before,
+.hamburger-menu::after,
+.hamburger-menu input {
+  content: "";
+  color: white;
+  width: var(--bar-width);
+  height: var(--bar-height);
+  background-color: white;
+  border-radius: 999px;
+  transform-origin: left center;
+  transition: opacity var(--animation-timing), width var(--animation-timing), rotate var(--animation-timing),
+    translate var(--animation-timing);
+}
+
+.hamburger-menu input {
+  appearance: none;
+  padding: 0;
+  margin: 0;
+  outline: none;
+  pointer-events: none;
+}
+
+.hamburger-menu input:checked {
+  opacity: 0;
+  width: 0;
+}
+
+.hamburger-menu:has(input:checked)::before {
+  rotate: 45deg;
+  width: var(--x-width);
+  translate: 0 calc(var(--bar-height) / -2);
+}
+
+.hamburger-menu:has(input:checked)::after {
+  rotate: -45deg;
+  width: var(--x-width);
+  translate: 0 calc(var(--bar-height) / 2);
+}
+
+aside {
+  width: max-content;
+
+  transition: translate var(--animation-timing);
+  translate: -100%;
+
+  position: fixed;
+  top: calc(2 * var(--hamburger-height));
+  left: 0;
+
+  translate: -100%;
+
+  display: flex;
+  flex-direction: column;
+}
+
+.hamburger-menu:has(input:checked) + aside {
+  translate: 0;
 }
