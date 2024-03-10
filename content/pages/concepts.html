@@ -1,79 +1,86 @@
 <h1>Concepts</h1>
+
 <section class="container">
   <h2 id="flights">Flights</h2>
+
   <h3>Overview</h3>
   <p>
     Flights in Yoke are analogous to Charts in Helm. A Chart is a collection of templates packaged as one referencable
-    entity. Similarly, in Yoke, Flights refer to both the code generating Kubernetes resources and the packaged
+    entity. Similarly, in Yoke, Flights refer to both the code that describes Kubernetes resources and the packaged
     WebAssembly (wasm) asset representing the executable.
   </p>
+
   <p>
-    At its heart, a Flight is a piece of software that generates Kubernetes resources. In that way, even a Helm Chart is
-    a subset of Flights (Go see <a href="/content/pages/helm_compatibility.html">Helm Compatibility</a> for more
-    information). This allows us to view Flights at two levels: High and Low Altitude Flights (high-Level vs low-level).
+    At its core, a Flight is a piece of software that generates Kubernetes resources. In that way, even a Helm Chart is
+    a subset of Flights (Refer to <a href="/content/pages/helm_compatibility.html">Helm Compatibility</a> for more
+    information). This allows us to view Flights at two levels: High and Low Altitude Flights (High-Level vs Low-Level).
   </p>
-  <h3>High Altitude Flights</h3>
+
+  <h3>High-Altitude Flights</h3>
   <p>
-    High-Level Flights are the programs/runtimes/compiled wasm executables that generate the Kubernetes Package Instance
-    for deployment.
+    High-Level Flights are the programs / runtimes / compiled wasm executables that generate the Kubernetes Package
+    Instance for deployment.
   </p>
-  <h3>Low Altitude Flights</h3>
+
+  <h3>Low-Altitude Flights</h3>
   <p>
     Low-Level Flights are the building blocks of the software. These are most likely represented as functions that take
-    inputs and return k8s resources. Unlike Helm Charts, they are not managed by a centralized repository, as they can
-    be shared via their language's ecosystems: npm, go modules, cargo, gems, and so on.
+    inputs and return Kubernetes resources. They can be shared via their language's ecosystems: npm, go modules, cargo,
+    gems, and so on.
   </p>
 </section>
 
 <section class="container">
   <h2 id="why-wasm">Why Wasm?</h2>
+
   <p>
     Yoke's goal is to enable software engineers to write packages for Kubernetes as code. The issue is that code is not
-    easy to package, and in and of itself code is useless without its runtime or compiler. Yoke would need to be able to
-    get the appropriate runtime or compiler for any language, and moreover it would need to get those dependencies
-    compiled for the correct architecture and OS as where yoke is running. This is would be an enormous task.
+    easy to package, and code itself is useless without its runtime or compiler. Yoke would need to be able to get the
+    appropriate runtime or compiler for any language, and moreover, it would need to get those dependencies compiled for
+    the correct architecture and OS as where Yoke is running. This would be an enormous task.
   </p>
+
   <p>
-    This leaves us with two options, either accept arbitrary input as packages or find a common target that many
+    This leaves us with two options: either accept arbitrary input as packages or find a common target that many
     languages support. Yoke chooses both options.
   </p>
 
-  <h3>Arbitray Input</h3>
+  <h3>Arbitrary Input</h3>
 
   <p>
-    The prior allows us to support any runtime, even those that do not compile to wasm. This allows us to write Flights
+    The former allows us to support any runtime, even those that do not compile to wasm. This allows us to write Flights
     in our beloved dynamic languages:
   </p>
-  <pre><code class="language-bash"># deploy a Flight defined in Python
+  <pre><code class="language-bash"># Deploy a Flight defined in Python
 python3 app.py | yoke takeoff my-release
 
-# or in Javascript
+# Or in Javascript
 node app.js | yoke takeoff my-release
 
-# or in ruby
+# Or in Ruby
 ruby app.rb | yoke takeoff my-release
 
-# or directly from a file
+# Or directly from a file
 yoke takeoff my-release < resources.yaml</code></pre>
-  <p class="pre-list">However it comes with serious drawbacks.</p>
+  <p class="pre-list">However, it comes with serious drawbacks:</p>
   <ul>
     <li>There are no physical assets that we can version and checksum against.</li>
-    <li>Arbitrary programs are running in a context that have access to your kubernetes cluster.</li>
+    <li>Arbitrary programs are running in a context that has access to your Kubernetes cluster.</li>
   </ul>
 
   <h3>Using Wasm</h3>
 
-  <p class="pre-list">With wasm, we can solve all our problems including the two mentioned above:</p>
+  <p class="pre-list">With wasm, we can solve all our problems, including the two mentioned above:</p>
   <ul>
     <li>We have a common target for multiple languages.</li>
     <li>A final asset that Yoke can track internally for changes.</li>
-    <li>A runtime that is not dependent on OS/ARCH</li>
-    <li>A runtime that is sandboxed (cannot access network or filesystem)</li>
+    <li>A runtime that is not dependent on OS/ARCH.</li>
+    <li>A runtime that is sandboxed (cannot access the network or filesystem).</li>
   </ul>
 
   <p>
-    For example if the following command is invoked twice with different wasm artifacts, Yoke can detect that suspicious
-    activity is taking place. This allows yoke to be decentralized with regards Flight assets.
+    For example, if the following command is invoked twice with different wasm artifacts, Yoke can detect that
+    suspicious activity is taking place. This allows Yoke to be decentralized with regards to Flight assets.
   </p>
   <pre><code class="language-bash">yoke takeoff my-release https://github.com/my-org/my-flight/releases/download/v1.2.3/flight.wasm</code></pre>
 </section>
