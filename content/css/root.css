@@ -26,6 +26,10 @@ body {
   align-items: center;
 }
 
+main {
+  padding: 5px 20px;
+}
+
 main,
 div,
 section {
@@ -71,6 +75,14 @@ p + p {
   padding: 0.25em 1em;
   background-color: #fbaf51;
   color: black;
+}
+
+.container a {
+  color: rgb(141, 112, 229);
+}
+
+.container a:hover {
+  color: rgb(0, 140, 255);
 }
 
 :root {

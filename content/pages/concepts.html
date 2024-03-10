@@ -1,0 +1,26 @@
+<h1>Concepts</h1>
+<section class="container">
+  <h2>Flights</h2>
+  <h3>Overview</h3>
+  <p>
+    Flights in Yoke are analogous to Charts in Helm. A Chart is a collection of templates packaged as one referencable
+    entity. Similarly, in Yoke, Flights refer to both the code generating Kubernetes resources and the packaged
+    WebAssembly (wasm) asset representing the executable.
+  </p>
+  <p>
+    At its heart, a Flight is a piece of software that generates Kubernetes resources. In that way, even a Helm Chart is
+    a subset of Flights (Go see <a href="/content/pages/helm_compatibility.html">Helm Compatibility</a> for more
+    information). This allows us to view Flights at two levels: High and Low Altitude Flights (high-Level vs low-level).
+  </p>
+  <h3>High Altitude Flights</h3>
+  <p>
+    High-Level Flights are the programs/runtimes/compiled wasm executables that generate the Kubernetes Package Instance
+    for deployment.
+  </p>
+  <h3>Low Altitude Flights</h3>
+  <p>
+    Low-Level Flights are the building blocks of the software. These are most likely represented as functions that take
+    inputs and return k8s resources. Unlike Helm Charts, they are not managed by a centralized repository, as they can
+    be shared via their language's ecosystems: npm, go modules, cargo, gems, and so on.
+  </p>
+</section>
