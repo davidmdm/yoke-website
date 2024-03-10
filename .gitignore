@@ -4,5 +4,7 @@
 *.out
 
 test_output
+playground
+
 
 cmd/server/content

@@ -1,2 +1,168 @@
 <h1>Examples</h1>
-<section class="container">Under Construction</section>
+<section class="container">
+  <h3>Disclaimer</h3>
+  <ul>
+    <li>
+      the following examples are written in Go but any language that compiles to wasm is a first class citizen for Yoke.
+      Writing it in Go allows us to take advantage of Kubernete's
+      <a href="https://github.com/kubernetes/client-go?tab=readme-ov-file#client-go">client-go</a> package. Languages
+      that do not compile to wasm can still be used but not benefit from Yoke's asset management. For more information
+      see <a href="/content/pages/concepts.html#why-wasm">Why Wasm</a>.
+    </li>
+    <li>
+      These examples assume some familiarity with the Go toolchain, and that <strong>yoke</strong> has already been
+      installed.
+    </li>
+  </ul>
+</section>
+
+<section class="container">
+  <h2 id="first-flight">Writing your first Flight</h2>
+  <p>The most simple implementation of a Flight, is to simply write the resources you want to standard out:</p>
+  <pre><code class="language-go">// example.go
+
+package main
+
+import "fmt"
+
+var deployment = `
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: example-app
+  labels:
+    app: example-app
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: example-app
+  template:
+    metadata:
+      labels:
+        app: example-app
+    spec:
+      containers:
+      - name: example-app-container
+        image: nginx:latest  # Replace with your actual container image
+        ports:
+        - containerPort: 80
+`
+
+func main() {
+	fmt.Println(deployment)
+}
+  </code></pre>
+
+  <h4>Compile it:</h4>
+  <pre><code class="language-bash">GOOS=wasip1 GOARCH=wasm go build -o example.wasm ./example.go</code></pre>
+
+  <h4>Deploy it:</h4>
+  <pre><code class="language-bash">yoke takeoff example ./example.wasm</code></pre>
+
+  <p>
+    And we're done! With this example, you have defined a valid Flight, compiled it to wasm, and had
+    <strong>yoke</strong> deploy the first revision of a release named example.
+  </p>
+
+  <p>
+    However, although illustrative as a first example, we haven't gained any of the advantages of using code to describe
+    our k8s packages. Indeed the previous example is equivalent to feeding the raw text directly to yoke:
+  </p>
+
+  <pre><code class="language-bash">yoke takeoff example < example.yaml</code></pre>
+</section>
+
+<section class="container">
+  <h2 id="using-client-go">Using Client-Go to build Flights</h2>
+  <p>
+    Now that we understand that Flights are simply programs that output the resources as JSON/YAML, we can start
+    representing our resources as Go values utilizing our own types and abstractions, or those provided for us by other
+    libraries.
+  </p>
+  <p>
+    As it happens <a href="https://github.com/kubernetes/client-go?tab=readme-ov-file#client-go">client-go</a> has a
+    package named <strong>applyconfigurations</strong> that allows us to build representations of core K8s resources.
+    Let's use it to redefine our deployment from the earlier example, and to add a service for it.
+  </p>
+  <pre><code class="language-go">// example.go
+package main
+
+import (
+	"encoding/json"
+	"os"
+
+	"k8s.io/apimachinery/pkg/util/intstr"
+
+	apicore "k8s.io/api/core/v1"
+	appsv1 "k8s.io/client-go/applyconfigurations/apps/v1"
+	corev1 "k8s.io/client-go/applyconfigurations/core/v1"
+	metav1 "k8s.io/client-go/applyconfigurations/meta/v1"
+)
+
+func main() {
+	appName := "example-app"
+
+	appLabels := map[string]string{"app": appName}
+
+	deployment := appsv1.Deployment(appName, "").
+		WithLabels(appLabels).
+		WithSpec(
+			appsv1.DeploymentSpec().
+				WithReplicas(2).
+				WithSelector(
+					metav1.LabelSelector().WithMatchLabels(appLabels),
+				).
+				WithTemplate(
+					corev1.PodTemplateSpec().
+						WithLabels(appLabels).
+						WithSpec(
+							corev1.PodSpec().
+								WithContainers(
+									corev1.Container().
+										WithName(appName).
+										WithImage("nginx:latest").
+										WithPorts(corev1.ContainerPort().WithContainerPort(80)),
+								),
+						),
+				),
+		)
+
+	service := corev1.Service(appName, "").
+		WithLabels(appLabels).
+		WithSpec(
+			corev1.ServiceSpec().
+				WithSelector(appLabels).
+				WithType(apicore.ServiceTypeClusterIP).
+				WithPorts(
+					corev1.ServicePort().
+						WithProtocol(apicore.ProtocolTCP).
+						WithPort(80).
+						WithTargetPort(intstr.FromInt(80)),
+				),
+		)
+
+	json.NewEncoder(os.Stdout).Encode([]any{deployment, service})
+}
+  </code></pre>
+
+  <p>Repeating the steps as in the first example, we:</p>
+
+  <h4>Compile it:</h4>
+  <pre><code class="language-bash">GOOS=wasip1 GOARCH=wasm go build -o example.wasm ./example.go</code></pre>
+
+  <h4>Deploy it:</h4>
+  <pre><code class="language-bash">yoke takeoff example ./example.wasm</code></pre>
+
+  <h3>Take-aways</h3>
+  <p>
+    We have created a second revision of our release called example. It contains both a deployment and a service.
+    Furthermore, it comes with all the advantages we expect from code. It has type-safety, IntelliSense, and
+    documentation is a click away. It is easy to imaging how we may break things out as a reusable functions, create our
+    own contracts, and write tests.
+  </p>
+  <p>
+    In this example, we used the client-go applyconfigurations package to build our resource values. However you may use
+    the types resource types directly, or create your own simplified representations.
+  </p>
+</section>
