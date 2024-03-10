@@ -37,10 +37,10 @@ func main() {
 }
 
 func run() error {
-	cfg := GetConfig()
-
 	ctx, cancel := xcontext.WithSignalCancelation(context.Background(), syscall.SIGINT, syscall.SIGTERM)
 	defer cancel()
+
+	cfg := GetConfig()
 
 	svr := http.Server{
 		Addr:        cfg.Port,

@@ -94,33 +94,3 @@ func Must2[T any](value T, err error) T {
 	Must(err)
 	return value
 }
-
-type pageWriter struct {
-	http.ResponseWriter
-	code    int
-	written bool
-}
-
-func (w *pageWriter) WriteHeader(code int) {
-	w.code = code
-	w.ResponseWriter.WriteHeader(code)
-}
-
-func (w *pageWriter) Write(data []byte) (int, error) {
-	if !w.written && (w.code == 404 || w.code == 500) {
-		switch w.code {
-		case 404:
-			w.Header().Set("Content-Type", "text/html")
-			w.ResponseWriter.Write(knownPages.NotFound)
-		case 500:
-			w.ResponseWriter.Write(knownPages.InternalError)
-		}
-		w.written = true
-	}
-
-	if w.written {
-		return len(data), nil
-	}
-
-	return w.ResponseWriter.Write(data)
-}
