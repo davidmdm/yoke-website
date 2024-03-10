@@ -3,7 +3,11 @@ version: "3"
 tasks:
   run:
     cmds:
-      - nodemon -w ./content -w ./server -e go,html,css -x 'kill $(lsof -t -i :8080) || true && go run ./cmd/generate && go run ./cmd/server'
+      - |
+        go run ./cmd/watch \
+          -d content,cmd/server \
+          -e go,html,css \
+          -x 'kill $(lsof -t -i :8080) 2>@1 /dev/null || true && go run ./cmd/generate && go run ./cmd/server'
 
   # Ironically the task runner is itself a dev dependency of the project.
   # To install it run the following command:
