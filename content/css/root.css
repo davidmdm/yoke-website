@@ -36,6 +36,14 @@ section {
   width: 100%;
 }
 
+.pre-list {
+  margin-bottom: 0;
+}
+
+ul {
+  margin-top: 0;
+}
+
 ul li {
   margin-top: 0.5em;
 }

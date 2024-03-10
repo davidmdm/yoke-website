@@ -27,5 +27,53 @@
 
 <section class="container">
   <h2 id="why-wasm">Why Wasm?</h2>
-  <p>Under construction</p>
+  <p>
+    Yoke's goal is to enable software engineers to write packages for Kubernetes as code. The issue is that code is not
+    easy to package, and in and of itself code is useless without its runtime or compiler. Yoke would need to be able to
+    get the appropriate runtime or compiler for any language, and moreover it would need to get those dependencies
+    compiled for the correct architecture and OS as where yoke is running. This is would be an enormous task.
+  </p>
+  <p>
+    This leaves us with two options, either accept arbitrary input as packages or find a common target that many
+    languages support. Yoke chooses both options.
+  </p>
+
+  <h3>Arbitray Input</h3>
+
+  <p>
+    The prior allows us to support any runtime, even those that do not compile to wasm. This allows us to write Flights
+    in our beloved dynamic languages:
+  </p>
+  <pre><code class="language-bash"># deploy a Flight defined in Python
+python3 app.py | yoke takeoff my-release
+
+# or in Javascript
+node app.js | yoke takeoff my-release
+
+# or in ruby
+ruby app.rb | yoke takeoff my-release
+
+# or directly from a file
+yoke takeoff my-release < resources.yaml</code></pre>
+  <p class="pre-list">However it comes with serious drawbacks.</p>
+  <ul>
+    <li>There are no physical assets that we can version and checksum against.</li>
+    <li>Arbitrary programs are running in a context that have access to your kubernetes cluster.</li>
+  </ul>
+
+  <h3>Using Wasm</h3>
+
+  <p class="pre-list">With wasm, we can solve all our problems including the two mentioned above:</p>
+  <ul>
+    <li>We have a common target for multiple languages.</li>
+    <li>A final asset that Yoke can track internally for changes.</li>
+    <li>A runtime that is not dependent on OS/ARCH</li>
+    <li>A runtime that is sandboxed (cannot access network or filesystem)</li>
+  </ul>
+
+  <p>
+    For example if the following command is invoked twice with different wasm artifacts, Yoke can detect that suspicious
+    activity is taking place. This allows yoke to be decentralized with regards Flight assets.
+  </p>
+  <pre><code class="language-bash">yoke takeoff my-release https://github.com/my-org/my-flight/releases/download/v1.2.3/flight.wasm</code></pre>
 </section>
