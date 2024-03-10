@@ -10,10 +10,15 @@ body {
   --pop-color: #6ad7e5;
   --background--color: #070936;
 
+  --body-x-margin: 120px;
+  --body-y-margin: 20px;
+
   font-family: Arial, sans-serif;
 
   background-color: var(--background--color);
   color: var(--text-color);
+
+  margin: var(--body-y-margin) var(--body-x-margin);
 
   display: flex;
   flex-direction: column;
@@ -27,15 +32,10 @@ section {
   width: 100%;
 }
 
-main {
-  margin: 1em 2.5em;
-}
-
 h1 {
   font-size: 2.5rem;
   color: var(--pop-color);
   text-align: left;
-  margin: 0 3.5em;
 }
 
 a {
@@ -66,22 +66,20 @@ p + p {
 .container {
   border-radius: 12px;
   justify-content: left;
-  max-width: 80%;
   min-width: 400px;
-  margin: 2em auto;
-  padding: 20px;
+  margin: 1.5em auto;
+  padding: 0.25em 1em;
   background-color: #fbaf51;
   color: black;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
 :root {
-  --bar-width: 30px;
-  --bar-height: 3px;
+  --hamburger-bar-width: 30px;
+  --hamburger-bar-height: 3px;
   --hamburger-gap: 6px;
   --hamburger-margin: 0.5em;
-  --hamburger-height: calc(3 * var(--bar-height) + 2 * var(--hamburger-gap));
-  --animation-timing: 200ms ease-in-out;
+  --hamburger-height: calc(3 * var(--hamburger-bar-height) + 2 * var(--hamburger-gap));
+  --hamburger-timing: 200ms ease-in-out;
 }
 
 .hamburger-menu {
@@ -104,13 +102,13 @@ p + p {
 .hamburger-menu input {
   content: "";
   color: white;
-  width: var(--bar-width);
-  height: var(--bar-height);
+  width: var(--hamburger-bar-width);
+  height: var(--hamburger-bar-height);
   background-color: white;
   border-radius: 999px;
   transform-origin: left center;
-  transition: opacity var(--animation-timing), width var(--animation-timing), rotate var(--animation-timing),
-    translate var(--animation-timing);
+  transition: opacity var(--hamburger-timing), width var(--hamburger-timing), rotate var(--hamburger-timing),
+    translate var(--hamburger-timing);
 }
 
 .hamburger-menu input {
@@ -129,26 +127,26 @@ p + p {
 .hamburger-menu:has(input:checked)::before {
   rotate: 45deg;
   width: var(--x-width);
-  translate: 0 calc(var(--bar-height) / -2);
+  translate: 0 calc(var(--hamburger-bar-height) / -2);
 }
 
 .hamburger-menu:has(input:checked)::after {
   rotate: -45deg;
   width: var(--x-width);
-  translate: 0 calc(var(--bar-height) / 2);
+  translate: 0 calc(var(--hamburger-bar-height) / 2);
 }
 
-aside {
+.side-panel {
   width: max-content;
+  max-width: var(--body-x-margin);
+  padding-left: 10px;
 
-  transition: translate var(--animation-timing);
+  transition: translate var(--hamburger-timing);
   translate: -100%;
 
   position: fixed;
   top: calc(2 * var(--hamburger-height));
   left: 0;
-
-  translate: -100%;
 
   display: flex;
   flex-direction: column;

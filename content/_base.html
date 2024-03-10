@@ -13,10 +13,14 @@
     <label class="hamburger-menu">
       <input type="checkbox" />
     </label>
-    <aside>
+    <aside class="side-panel">
       <nav>
         <div>
           <a href="/">home</a>
+        </div>
+        <hr />
+        <div>
+          <a href="/content/pages/concepts.html">concepts</a>
         </div>
         <hr />
         <div>
@@ -29,4 +33,11 @@
     </main>
     <footer></footer>
   </body>
+  <link href="/content/css/prism-vsc-dark.css" rel="stylesheet" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-go.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js"></script>
+  <script type="module">
+    Prism?.highlightAll();
+  </script>
 </html>
