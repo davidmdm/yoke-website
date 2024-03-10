@@ -30,10 +30,9 @@ func Handler() http.Handler {
 
 	mux.HandleFunc("GET /content/", func() http.HandlerFunc {
 		return func(w http.ResponseWriter, r *http.Request) {
-			w.Header().Set("Content-Type", mime.TypeByExtension(path.Ext(r.URL.Path)))
-
 			content, err := content.ReadFile(r.URL.Path[1:])
 			if err != nil {
+				w.Header().Set("Content-Type", "text/html")
 				if errors.Is(err, os.ErrNotExist) {
 					w.WriteHeader(404)
 					w.Write(knownPages.NotFound)
@@ -44,6 +43,7 @@ func Handler() http.Handler {
 				return
 			}
 
+			w.Header().Set("Content-Type", mime.TypeByExtension(path.Ext(r.URL.Path)))
 			w.Write(content)
 		}
 	}())
