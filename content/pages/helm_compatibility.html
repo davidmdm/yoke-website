@@ -17,11 +17,74 @@
     <li>Render the Chart with some values.</li>
   </ul>
   <p>At the time of this writing, Yoke provides Go packages to accomplish the above items simply and easily.</p>
+
+  <h3>Disclaimer</h3>
+  <p>
+    The following examples are built in Go. This is partly due to the ease of using Go Embedding, but mostly because
+    Yoke and Helm are written in Go. The reader is expected to be familiar with Go Embedding.
+  </p>
 </section>
 
 <section class="container">
   <h2>Embedding a Chart as a Zipped Archive</h2>
-  <p>DOcs Under construction</p>
+  <p>
+    The Yoke helm package supplies a function for creating a Chart from it's embedded archive. Suppose you wanted to use
+    the <a href="oci://registry-1.docker.io/bitnamicharts/redis">bitnami redis chart</a> from Yoke. The first step is to
+    download the archive using helm.
+  </p>
+
+  <pre><code class="language-bash">helm pull oci://registry-1.docker.io/bitnamicharts/redis</code></pre>
+
+  <p>
+    This will create a tar file on your machine such as <strong>redis-18.17.0.tgz</strong>. From there you embed it into
+    your application, and invoke it using the name of the release, destination k8s namespace, and any values you wish to
+    pass to it.
+  </p>
+
+  <pre><code class="language-go">package main
+
+import (
+	_ "embed"
+	"encoding/json"
+	"fmt"
+	"os"
+
+	"github.com/davidmdm/yoke/pkg/helm"
+)
+
+//go:embed redis-18.17.0.tgz
+var archive []byte
+
+func main() {
+	if err := run(); err != nil {
+		fmt.Fprintln(os.Stderr, err)
+		os.Exit(1)
+	}
+}
+
+func run() error {
+	chart, err := helm.LoadChartFromZippedArchive(archive)
+	if err != nil {
+		return fmt.Errorf("failed to load chart from zipped archive: %w", err)
+	}
+
+	resources, err := chart.Render(
+		// The first positional arg is the release name used
+		// For example if this program is invoked as: yoke takeoff example ./example.wasm
+		// os.Args[0] will be "example"
+		os.Args[0],
+		// Target namespace.
+		"default",
+		// Arguments as described by the bitnami redis chart. 
+    // Any value that serializes to equivalent json will work.
+		map[string]any{"auth": map[string]any{"enabled": "false"}},
+	)
+	if err != nil {
+		return fmt.Errorf("failed to render chart: %w", err)
+	}
+
+	return json.NewEncoder(os.Stdout).Encode(resources)
+}</code></pre>
 </section>
 
 <section class="container">
