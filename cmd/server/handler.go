@@ -3,12 +3,10 @@ package main
 import (
 	"errors"
 	"fmt"
-	"io"
 	"mime"
 	"net/http"
 	"os"
 	"path"
-	"strings"
 	"time"
 
 	"golang.org/x/net/http2"
@@ -20,12 +18,7 @@ func Handler() http.Handler {
 
 	mux.HandleFunc("GET /{$}", func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "text/html")
-		if r.URL.Path == "/" {
-			w.Write(knownPages.Home)
-			return
-		}
-		w.WriteHeader(404)
-		w.Write(knownPages.NotFound)
+		w.Write(knownPages.Home)
 	})
 
 	mux.HandleFunc("GET /content/", func() http.HandlerFunc {
@@ -48,22 +41,9 @@ func Handler() http.Handler {
 		}
 	}())
 
-	handler := WithMethod(mux, "GET")
-	handler = WithLogger(handler)
+	handler := WithLogger(mux)
 
 	return h2c.NewHandler(handler, new(http2.Server))
-}
-
-func WithMethod(handler http.Handler, method string) http.Handler {
-	method = strings.ToUpper(method)
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		if r.Method != method {
-			w.WriteHeader(405)
-			io.WriteString(w, "<html><body>methot not allowed</body></html>")
-			return
-		}
-		handler.ServeHTTP(w, r)
-	})
 }
 
 func WithLogger(handler http.Handler) http.Handler {
@@ -82,15 +62,4 @@ type CodeRecorder struct {
 func (recorder *CodeRecorder) WriteHeader(code int) {
 	recorder.ResponseWriter.WriteHeader(code)
 	recorder.code = code
-}
-
-func Must(err error) {
-	if err != nil {
-		panic(err)
-	}
-}
-
-func Must2[T any](value T, err error) T {
-	Must(err)
-	return value
 }
