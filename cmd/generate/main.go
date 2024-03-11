@@ -9,7 +9,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/davidmdm/yoke-website/internal"
+	"github.com/davidmdm/x/xcontainer/trie"
 	"github.com/yosssi/gohtml"
 )
 
@@ -33,7 +33,7 @@ func run() error {
 		return err
 	}
 
-	var baseTrie internal.PrefixTree[[]byte]
+	var baseTrie trie.PrefixTree[[]byte]
 
 	var copyFunc fs.WalkDirFunc = func(path string, d fs.DirEntry, err error) error {
 		if err != nil {
