@@ -59,15 +59,17 @@ func run() error {
 				return err
 			}
 
-			dirPath := filepath.Dir(path)
-			rootHTML := baseTrie.GetLongestSubmatch(dirPath)
+			var (
+				dirPath  = filepath.Dir(path)
+				rootHTML = baseTrie.GetLongestSubmatch(dirPath)
+			)
 
 			merged := func() []byte {
 				if len(rootHTML) == 0 {
 					return baseHTML
 				}
-				baseHTML = bytes.Replace(rootHTML, []byte("<!-- REPLACE ME -->"), baseHTML, 1)
-				return gohtml.FormatBytes(baseHTML)
+				html := bytes.Replace(rootHTML, []byte("<!-- REPLACE ME -->"), baseHTML, 1)
+				return gohtml.FormatBytes(html)
 			}()
 
 			baseTrie.Insert(dirPath, merged)
