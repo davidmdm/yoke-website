@@ -2,20 +2,24 @@
 
 <section class="container">
   <h2>Overview</h2>
+
   <p>
     Although Yoke has the potential to change how we write Kubernetes Packages, as of today and for the past almost 10
     years, kubernetes package management has been dominated by <a href="https://helm.sh">Helm</a>. Yoke has no chance of
     succeeding if it cannot build off of Helm and provide a migration path forward.
   </p>
+
   <p class="pre-list">
     At its core, a Yoke Flight is a piece of software that generates Kubernetes resources. In that way, even a Helm
     Chart is a subset of Flights. From that vantage point, our Flight needs to accomplish two things to be compatible
     with Helm:
   </p>
+
   <ul>
     <li>Embed a Chart.</li>
     <li>Render the Chart with some values.</li>
   </ul>
+
   <p>At the time of this writing, Yoke provides Go packages to accomplish the above items simply and easily.</p>
 
   <h3>Disclaimer</h3>
@@ -27,6 +31,7 @@
 
 <section class="container">
   <h2>Embedding a Chart as a Zipped Archive</h2>
+
   <p>
     The Yoke helm package supplies a function for creating a Chart from it's embedded archive. Suppose you wanted to use
     the <a href="oci://registry-1.docker.io/bitnamicharts/redis">bitnami redis chart</a> from Yoke. The first step is to
@@ -89,7 +94,33 @@ func run() error {
 
 <section class="container">
   <h2>Progressive Migration via Chart FS Embedding</h2>
-  <p>Docs Under construction</p>
+
+  <p>
+    The advantage of embedding a zipped archive is that it is simpler to get started and use the chart. It's a great
+    approach when you want to wrap a Chart, or combine multiple Charts into one. Its major problem is that we can't
+    modify the Chart, which is key when we want to port the logic out of the chart and into code. For this purpose, Yoke
+    provides the ability to load a chart from an embedded filesystem.
+  </p>
+
+  <p>Continuing from our previous example, let's untar the archive:</p>
+
+  <pre><code class="language-bash">tar xvf redis-18.17.0.tgz</code></pre>
+
+  <p>
+    We should now have a directory called <strong>redis</strong> containing the Chart's contents. With a small tweak of
+    our previous example we can now use this folder to create our Chart instance directly in our Flight.
+  </p>
+
+  <pre><code class="language-go">// the "all:" prefix is important, otherwise Go will not embed hidden and private files
+//go:embed all:redis
+var chartFS embed.FS</code></pre>
+
+  <pre><code class="language-go">chart, err := helm.LoadChartFromFS(chartFS)
+if err != nil {
+	return fmt.Errorf("failed to load chart from zipped archive: %w", err)
+}</code></pre>
+
+  <p>From here, now you can iterate on your flight, slowly porting the template rendering logic into code.</p>
 </section>
 
 <section class="container">
