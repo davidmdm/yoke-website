@@ -125,5 +125,54 @@ if err != nil {
 
 <section class="container">
   <h2>Generating Flights from Chart Repos Automatically</h2>
-  <p>Docs Under construction</p>
+
+  <p>
+    Embedding charts and rendering their contents via Yoke works well enough. Doing those steps by hand isn't a lot of
+    work, but why not automate it? While we are at it, is there anything we can gain from an automated approach?
+  </p>
+
+  <p>Yoke provides a utility command called <strong>helm2go</strong>. To install it run:</p>
+
+  <pre><code class="language-bash">go install github.com/davidmdm/yoke/cmd/helm2go@latest</code></pre>
+
+  <p class="pre-list">The utility is a wrapper over:</p>
+  <ul>
+    <li>helm for pulling charts (requires helm to be installed in $PATH)</li>
+    <li>
+      bitnami's <a href="https://github.com/bitnami/readme-generator-for-helm">readme-generator-for-helm</a> which
+      converts a Chart's values.yaml into a json schema (requires a NodeJS Runtime 16+)
+    </li>
+    <li>
+      <a href="https://github.com/atombender/go-jsonschema">go-jsonschema</a> for converting jsonschema definitions to
+      Go Types (requires the Go Toolchain to be present to install the library if not present)
+    </li>
+  </ul>
+
+  <p>Together, all these tools allow us to generate Flight packages directly from a Chart URL:</p>
+
+  <pre><code class="language-bash">helm2go --repo=oci://registry-1.docker.io/bitnamicharts/mongodb --outdir=flights/mongodb</code></pre>
+
+  <p>
+    Then we can simply use the generated <strong>mongodb</strong> package to handle all the boilerplate of instantiating
+    and executing the Chart, plus provide inferred typings directly from the Chart.
+  </p>
+
+  <pre><code class="language-go">package main
+
+import (
+	"encoding/json"
+	"os"
+
+	"github.com/davidmdm/yoke/cmd/examples/internal/flights/mongodb"
+)
+
+func main() {
+	resources, err := mongodb.RenderChart(os.Args[0], "default", &mongodb.Values{
+		// ... values ...
+	})
+	if err != nil {
+		panic(err)
+	}
+	json.NewEncoder(os.Stdout).Encode(resources)
+}</code></pre>
 </section>
