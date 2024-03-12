@@ -27,7 +27,7 @@ body {
 }
 
 main {
-  padding: 5px 20px;
+  padding: 2em 2.5em;
 }
 
 main,
@@ -101,7 +101,7 @@ p + p {
   --hamburger-bar-width: 30px;
   --hamburger-bar-height: 3px;
   --hamburger-gap: 6px;
-  --hamburger-margin: 0.5em;
+  --hamburger-margin: 1em;
   --hamburger-height: calc(3 * var(--hamburger-bar-height) + 2 * var(--hamburger-gap));
   --hamburger-timing: 200ms ease-in-out;
 }
@@ -168,8 +168,10 @@ p + p {
   transition: translate var(--hamburger-timing);
   translate: -100%;
 
+  font-size: 1.2em;
+
   position: fixed;
-  top: calc(2 * var(--hamburger-height));
+  top: calc(2 * var(--hamburger-height) + var(--hamburger-margin));
   left: 0;
 
   display: flex;
@@ -184,7 +186,7 @@ p + p {
   position: absolute;
   top: 0;
   text-align: right;
-  padding: 1em;
+  padding: 1em 1.5em;
 }
 
 .github-link img {
