@@ -179,3 +179,18 @@ p + p {
 .hamburger-menu:has(input:checked) + aside {
   translate: 0;
 }
+
+.github-link {
+  position: absolute;
+  top: 0;
+  text-align: right;
+  padding: 1em;
+}
+
+.github-link img {
+  height: 1em;
+}
+
+.github-link a {
+  font-size: 1.5em;
+}
