@@ -4,16 +4,16 @@
 </h1>
 
 <section class="container">
-  <h2>Gitops: Yoke & ArgoCD</h2>
+  <h2>GitOps: Yoke & ArgoCD</h2>
   <p>
-    The yoke CLI is analagous to helm's. It is is a client-side tool that communicates with your cluster and keeps track
-    of packages deployed to it. However, for many that is not how we deploy packages anymore, helm or not. Where the
-    words <em>Platform Engineering</em> are uttered <em>GitOps</em> is sure to follow.
+    The Yoke CLI is analogous to Helm's. It is a client-side tool that communicates with your cluster and keeps track of
+    packages deployed to it. However, for many, that is not how we deploy packages anymore, Helm or not. Where the words
+    <em>Platform Engineering</em> are uttered, <em>GitOps</em> is sure to follow.
   </p>
   <p>
     To that end, we want to be able to declare our Flights as static resources that a controller such as ArgoCD will
-    pick up, and then manage our resources for us. Out of the box ArgoCD supports helm, jsonnette, and kustomize. It
-    also allows you to extend its behavior using
+    pick up and then manage our resources for us. Out of the box, ArgoCD supports Helm, Jsonnet, and Kustomize. To
+    support more use cases, it accepts extensions to K8s manifest generation via
     <a href="https://argo-cd.readthedocs.io/en/stable/operator-manual/config-management-plugins"
       >config management plugins</a
     >.
@@ -23,8 +23,8 @@
 <section class="container">
   <h2>Introducing YokeCD</h2>
   <p>
-    To be compatible with ArgoCD, yoke offers an ArgoCD CPM Sidecar docker image hosted at
-    <a href="https://hub.docker.com/repository/docker/davidmdm/yokecd/general">dockerhub - davidmdm/yokecd</a>.
+    To be compatible with ArgoCD, Yoke offers an ArgoCD CPM Sidecar Docker image hosted at
+    <a href="https://hub.docker.com/repository/docker/davidmdm/yokecd/general">DockerHub - davidmdm/yokecd</a>.
   </p>
   <h2>Installing YokeCD Sidecar</h2>
   <h3>Fresh ArgoCD Installation</h3>
