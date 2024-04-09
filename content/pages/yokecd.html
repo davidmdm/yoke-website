@@ -53,13 +53,54 @@ spec:
   <h3>Parameters</h3>
   <p>In order to use the plugin, we must pass parameters to it. The following parameters are supported:</p>
   <ul>
-    <li><strong>wasmURL (string)</strong>: The url to download the Flight's compiled wasm from.</li>
     <li>
-      <strong>wasmPath (string)</strong>: The relative location in the source repository to the Flight's wasm asset.
+      <strong>wasm (string)</strong>: The url to download or the relative location in the source repository to the
+      Flight's wasm asset.
     </li>
     <li>
       <strong>input (string)</strong>: The input that will be passed as stdin to the wasm executable upon execution.
     </li>
     <li><strong>args ([]string)</strong>: The args that will be passed as wasm executable upon execution.</li>
   </ul>
+
+  <pre><code class="language-yaml">apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: pg
+  namespace: argocd
+spec:
+  project: default
+
+  source:
+    repoURL: https://github.com/davidmdm/yokecd-demo
+    path: ./cmd/pg
+    targetRevision: repobuilds
+
+    plugin:
+      name: yokecd
+      parameters:
+        # Will use the asset found at https://github.com/davidmdm/yokecd-demo/cmd/pg/main.wasm.gz
+        # at revision repobuilds
+        - name: wasm
+          string: main.wasm.gz
+
+        # Will use the wasm found at this URL. Note that when downloading from a URL
+        # the source repoURL, path, and targetRevision are not used but are still required by argocd.
+        # - name: wasm
+        #   string: https://github.com/davidmdm/yokecd-demo/releases/download/pg%2Fv1/pg.wasm
+
+        - name: args
+          array: ["--key=value", "positional-arg"]
+
+        - name: input
+          string: 'any-input-you-want'
+
+  destination:
+    name: in-cluster
+    namespace: default
+
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true</code></pre>
 </section>

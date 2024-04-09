@@ -97,6 +97,10 @@ p + p {
   color: rgb(0, 140, 255);
 }
 
+pre {
+  border-radius: 0.4em;
+}
+
 :root {
   --hamburger-bar-width: 30px;
   --hamburger-bar-height: 3px;
