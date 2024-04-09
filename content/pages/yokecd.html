@@ -26,8 +26,40 @@
     To be compatible with ArgoCD, Yoke offers an ArgoCD CPM Sidecar Docker image hosted at
     <a href="https://hub.docker.com/repository/docker/davidmdm/yokecd/general">DockerHub - davidmdm/yokecd</a>.
   </p>
+</section>
+
+<section class="container">
   <h2>Installing YokeCD Sidecar</h2>
   <h3>Fresh ArgoCD Installation</h3>
   <pre><code class="language-bash">yoke takeoff --namespace argocd yokecd TODO-LINK-TO-YOKECD-FLIGHT</code></pre>
   <h3>Patch an Existing ArgoCD Installation</h3>
+</section>
+
+<section class="container">
+  <h2>Creating YokeCD Applications</h2>
+  <p>YokeCD applications are normal ArgoCD Applications that use the yokecd plugin.</p>
+  <pre><code class="language-yaml">apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: example
+  namespace: argocd
+spec:
+  project: default
+  source:
+    plugin:
+      name: yokecd
+# ... and all other required fields</code></pre>
+
+  <h3>Parameters</h3>
+  <p>In order to use the plugin, we must pass parameters to it. The following parameters are supported:</p>
+  <ul>
+    <li><strong>wasmURL (string)</strong>: The url to download the Flight's compiled wasm from.</li>
+    <li>
+      <strong>wasmPath (string)</strong>: The relative location in the source repository to the Flight's wasm asset.
+    </li>
+    <li>
+      <strong>input (string)</strong>: The input that will be passed as stdin to the wasm executable upon execution.
+    </li>
+    <li><strong>args ([]string)</strong>: The args that will be passed as wasm executable upon execution.</li>
+  </ul>
 </section>
