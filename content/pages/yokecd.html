@@ -31,8 +31,15 @@
 <section class="container">
   <h2>Installing YokeCD Sidecar</h2>
   <h3>Fresh ArgoCD Installation</h3>
-  <pre><code class="language-bash">yoke takeoff --namespace argocd yokecd TODO-LINK-TO-YOKECD-FLIGHT</code></pre>
+  <p>
+    The yoke project maintains a Flight that wraps the
+    <a href="https://github.com/argoproj/argo-helm/releases/tag/argo-cd-6.7.12"> ArgoCD Chart v6.17.2</a>. Any input
+    passed to the flight via stdin is directly passed to the ArgoCD Chart. Additionally the Flight installs the sidecar
+    on the argocd-repo-server making the yokecd plugin available to argocd applications.
+  </p>
+  <pre><code class="language-bash">yoke takeoff --namespace argocd yokecd https://github.com/davidmdm/yoke/releases/download/yokecd-installer%2Fv0.0.2/yokecd-installer.wasm.gz</code></pre>
   <h3>Patch an Existing ArgoCD Installation</h3>
+  <p>Docs under construction.</p>
 </section>
 
 <section class="container">
