@@ -64,6 +64,20 @@ a:hover {
   color: #ff6600d4;
 }
 
+.table {
+  padding: 0.5em;
+  background-color: rgb(183 165 242 / 83%);
+  border-radius: 0.4em;
+
+  display: grid;
+  grid-template-columns: max-content max-content auto;
+
+  div {
+    padding: 0.3em 1em;
+    border-bottom: 1px solid black;
+  }
+}
+
 /* Style paragraphs */
 p {
   font-size: 1.1rem;

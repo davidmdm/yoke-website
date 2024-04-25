@@ -58,17 +58,39 @@ spec:
 # ... and all other required fields</code></pre>
 
   <h3>Parameters</h3>
-  <p>In order to use the plugin, we must pass parameters to it. The following parameters are supported:</p>
-  <ul>
-    <li>
-      <strong>wasm (string)</strong>: The url to download or the relative location in the source repository to the
-      Flight's wasm asset.
-    </li>
-    <li>
-      <strong>input (string)</strong>: The input that will be passed as stdin to the wasm executable upon execution.
-    </li>
-    <li><strong>args ([]string)</strong>: The args that will be passed as wasm executable upon execution.</li>
-  </ul>
+  <p>
+    In order to use and configure the plugin, we must pass parameters to it. The following parameters are supported:
+  </p>
+
+  <div class="table">
+    <div><strong>Parameter</strong></div>
+    <div><strong>Type</strong></div>
+    <div><strong>Description</strong></div>
+
+    <div>wasm</div>
+    <div>string</div>
+    <div>
+      The url to download or the relative location in the source repository to the Flight's wasm asset. Cannot be used
+      when parameter <strong>build</strong> is enabled.
+    </div>
+
+    <div>build</div>
+    <div>string</div>
+    <div>
+      A boolean string signalling that the wasm should be compiled on the fly by yokecd using the Go Toolchain in the
+      context of the Application's source. Cannot be used with parameter <strong>wasm</strong>
+    </div>
+
+    <div>input</div>
+    <div>string</div>
+    <div>The input that will be passed as stdin to the wasm executable upon execution</div>
+
+    <div>args</div>
+    <div>[]string</div>
+    <div>The args that will be passed to the Flight Executable upon execution</div>
+  </div>
+
+  <p><strong>One of build or wasm must be specified.</strong></p>
 
   <pre><code class="language-yaml">apiVersion: argoproj.io/v1alpha1
 kind: Application
@@ -81,20 +103,26 @@ spec:
   source:
     repoURL: https://github.com/davidmdm/yokecd-demo
     path: ./cmd/pg
-    targetRevision: repobuilds
+    targetRevision: main
 
     plugin:
       name: yokecd
       parameters:
         # Will use the asset found at https://github.com/davidmdm/yokecd-demo/cmd/pg/main.wasm.gz
-        # at revision repobuilds
+        # at revision main.
+        #
+        # This parameter cannot be used at the same time as "build"
         - name: wasm
-          string: main.wasm.gz
+          string: main.wasm.gz # Alternatively can be a url for example:
+                               # https://github.com/org/repo/releases/downloads/v1.0.0/main.wasm
+                               # If this is the case the application's source is not used.
 
-        # Will use the wasm found at this URL. Note that when downloading from a URL
-        # the source repoURL, path, and targetRevision are not used but are still required by argocd.
-        # - name: wasm
-        #   string: https://github.com/davidmdm/yokecd-demo/releases/download/pg%2Fv1/pg.wasm
+        # Will build the wasm executable using the Go Toolchain with the source specified by the application.
+        # The source must be a Go Module or inside a Go module.
+        #
+        # This parameter cannot be used at the same time as "wasm"
+        - name: build
+          string: 'true'
 
         - name: args
           array: ["--key=value", "positional-arg"]
