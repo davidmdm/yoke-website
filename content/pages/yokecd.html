@@ -6,18 +6,29 @@
 <section class="container">
   <h2>GitOps: Yoke & ArgoCD</h2>
   <p>
-    The Yoke CLI is analogous to Helm's. It is a client-side tool that communicates with your cluster and keeps track of
-    packages deployed to it. However, for many, that is not how we deploy packages anymore, Helm or not. Where the words
+    The Yoke CLI is analogous to the Helm CLI. It is a client-side tool that communicates with your cluster and keeps
+    track of packages deployed to it. However, for many, that is not how we deploy packages anymore. Where the words
     <em>Platform Engineering</em> are uttered, <em>GitOps</em> is sure to follow.
   </p>
   <p>
-    To that end, we want to be able to declare our Flights as static resources that a controller such as ArgoCD will
-    pick up and then manage our resources for us. Out of the box, ArgoCD supports Helm, Jsonnet, and Kustomize. To
-    support more use cases, it accepts extensions to K8s manifest generation via
+    To that end, we want to be able to write our Flights (programs that encapsulate a set of kubernetes packages as
+    code) and have a continuous deployment tool, such as ArgoCD, manage our resources for us. Out of the box, ArgoCD
+    supports Helm, Jsonnet, and Kustomize. To support more use cases, it accepts extensions via
     <a href="https://argo-cd.readthedocs.io/en/stable/operator-manual/config-management-plugins"
       >config management plugins</a
     >.
   </p>
+  <p>
+    YokeCD is the official yoke config management plugin for ArgoCD. It allows you to write ArgoCD Applications but have
+    their source evaluated by yoke's embedded wasm interpreter (wazero). The <strong>yokecd plugin</strong> supports a
+    variety of setups:
+  </p>
+  <ul>
+    <li>Invoke a local wasm binary found in the application's source.</li>
+    <li>Invoke a remote wasm binary downloaded from a http/https url.</li>
+    <li>Compile an application's source on the fly and evaluate it using the Go Toolchain.</li>
+    <li>Configure any invocation of the binary with flags and standard input defined in the plugin's definition.</li>
+  </ul>
 </section>
 
 <section class="container">
@@ -30,6 +41,7 @@
 
 <section class="container">
   <h2>Installing YokeCD Sidecar</h2>
+
   <h3>Fresh ArgoCD Installation</h3>
   <p>
     The yoke project maintains a Flight that wraps the
@@ -37,9 +49,52 @@
     passed to the flight via stdin is directly passed to the ArgoCD Chart. Additionally the Flight installs the sidecar
     on the argocd-repo-server making the yokecd plugin available to argocd applications.
   </p>
-  <pre><code class="language-bash">yoke takeoff --namespace argocd yokecd https://github.com/davidmdm/yoke/releases/download/yokecd-installer%2Fv0.0.2/yokecd-installer.wasm.gz</code></pre>
+  <pre>
+    <code class="language-bash">yoke takeoff --namespace argocd yokecd https://github.com/davidmdm/yoke/releases/download/yokecd-installer%2Fv0.0.2/yokecd-installer.wasm.gz</code>
+  </pre>
+
   <h3>Patch an Existing ArgoCD Installation</h3>
-  <p>Docs under construction.</p>
+  <p>
+    If you already have an existing ArgoCD installating you must patch the argocd-repo-server with the yokecd sidecar
+    image. To do so create the following manifest substituting any names to match your deployment:
+  </p>
+  <pre><code class="language-yaml">apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: YOUR-ARGOCD-REPO-SERVER-NAME    # typically "argocd-repo-server", possibly with a prefix if installed via helm.
+  namespace: YOUR-ARGOCD-NAMESPACE-NAME # typically "argocd"
+spec:
+  template:
+    spec:
+      containers:
+        - name: yokecd
+          image: davidmdm/yokecd:latest
+          imagePullPolicy: IfNotPresent # use the imagePullPolicy that best fits your needs.
+          command:
+            - /var/run/argocd/argocd-cmp-server
+          securityContext: # required by argocd cmp spec. Must be user 999.
+            runAsNonRoot: true
+            runAsUser: 999
+          volumeMounts:
+            - name: var-files
+              mountPath: /var/run/argocd
+            - name: plugins
+              mountPath: /home/argocd/cmp-server/plugins
+            - name: cmp-tmp
+              mountPath: /tmp
+      volumes:
+        - name: cmp-tmp
+          emptyDir: {}</code></pre>
+
+  <p>
+    Once your file is created, let's call it `patch.yaml`, we can now proceed to patch the existing argocd deployment.
+    We will assumed in the following command that the argocd repo server deployment has name
+    <strong>argocd-repo-server</strong> as per the standard installation. If this is not the case for your installation
+    please substitute the name accordingly. We will also assume that ArgoCD is deployed in a namespace named
+    <strong>argocd</strong>, if this is not the case please substitute accordingly once more.
+  </p>
+
+  <pre><code class="language-bash">kubectl patch deployments/argocd-repo-server --namespace=argocd --patch-file=patch.yaml</code></pre>
 </section>
 
 <section class="container">
@@ -138,4 +193,31 @@ spec:
     automated:
       prune: true
       selfHeal: true</code></pre>
+</section>
+
+<section class="container">
+  <h2>YokeCD Service Catalog</h2>
+  <p>
+    When using ArgoCD, it is common to use the app of apps pattern, and have a root application watch a repository for
+    more applications. Any repository that contains Flight programs can deploy them with ArgoCD via the
+    <strong>yokecd plugin</strong>.
+  </p>
+  <p>
+    The following is an example structure of a service catalog with two releases: alpha and beta. Both releases are
+    described as Go programs and contain an ArgoCD Application manifest that would use the
+    <strong>yokecd plugin with build parameter</strong>.
+  </p>
+  <pre><code class="language-bash">services
+├── alpha
+│   ├── app.yaml
+│   └── main.go
+├── beta
+│   ├── app.yaml
+│   └── main.go
+├── go.mod
+└── go.sum
+</code></pre>
+  <p>
+    Other setups are possible, and any service repository can be mixed and matched with regular ArgoCD Applications.
+  </p>
 </section>

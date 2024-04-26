@@ -65,8 +65,8 @@ a:hover {
 }
 
 .table {
-  padding: 0.5em;
-  background-color: rgb(183 165 242 / 83%);
+  padding: 0.7em;
+  background-color: #a1d1cb;
   border-radius: 0.4em;
 
   display: grid;
