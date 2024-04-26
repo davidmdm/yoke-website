@@ -79,8 +79,13 @@ yoke takeoff my-release < resources.yaml</code></pre>
   </ul>
 
   <p>
-    For example, if the following command is invoked twice with different wasm artifacts, Yoke can detect that
-    suspicious activity is taking place. This allows Yoke to be decentralized with regards to Flight assets.
+    Wasm being sandboxed is a big deal for us. It eliminates side-effects such as IO and makes our programs predictable.
+    It buys us a measure of security too, given that should a supply chain attack happen in the dependencies of your
+    programs, an attacker would <strong>not</strong> have direct access to your filesystem, the network, or ultimately
+    your K8s cluster.
   </p>
-  <pre><code class="language-bash">yoke takeoff my-release https://github.com/my-org/my-flight/releases/download/v1.2.3/flight.wasm</code></pre>
+
+  <p>Example:</p>
+  <pre><code class="language-bash">GOOS=wasip1 GOARCH=wasm go build -o main.wasm ./my-flight
+yoke takeoff my-release ./main.wasm</code></pre>
 </section>

@@ -27,7 +27,7 @@ body {
 }
 
 main {
-  padding: 2em 2.5em;
+  padding: 2rem 2.5rem;
 }
 
 main,
@@ -42,16 +42,23 @@ section {
 
 ul {
   margin-top: 0;
+  li {
+    font-size: 1.2rem;
+  }
 }
 
 ul li {
-  margin-top: 0.5em;
+  margin-top: 0.5rem;
 }
 
 h1 {
   font-size: 2.5rem;
   color: var(--pop-color);
   text-align: left;
+}
+
+h3 {
+  text-decoration: underline;
 }
 
 a {
@@ -65,22 +72,22 @@ a:hover {
 }
 
 .table {
-  padding: 0.7em;
+  padding: 0.7rem;
   background-color: #a1d1cb;
-  border-radius: 0.4em;
+  border-radius: 0.4rem;
 
   display: grid;
   grid-template-columns: max-content max-content auto;
 
   div {
-    padding: 0.3em 1em;
+    padding: 0.3rem 1rem;
     border-bottom: 1px solid black;
   }
 }
 
 /* Style paragraphs */
 p {
-  font-size: 1.1rem;
+  font-size: 1.2rem;
   line-height: 1.5;
   margin: 20px 0;
 
@@ -97,8 +104,8 @@ p + p {
   border-radius: 12px;
   justify-content: left;
   min-width: 400px;
-  margin: 1.5em auto;
-  padding: 1em 2.5em;
+  margin: 1.5rem auto;
+  padding: 1rem 2.5rem;
   background-color: #fbaf51;
   color: black;
 }
@@ -112,14 +119,14 @@ p + p {
 }
 
 pre {
-  border-radius: 0.4em;
+  border-radius: 0.4rem;
 }
 
 :root {
   --hamburger-bar-width: 30px;
   --hamburger-bar-height: 3px;
   --hamburger-gap: 6px;
-  --hamburger-margin: 1em;
+  --hamburger-margin: 1rem;
   --hamburger-height: calc(3 * var(--hamburger-bar-height) + 2 * var(--hamburger-gap));
   --hamburger-timing: 200ms ease-in-out;
 }
@@ -186,7 +193,7 @@ pre {
   transition: translate var(--hamburger-timing);
   translate: -100%;
 
-  font-size: 1.2em;
+  font-size: 1.2rem;
 
   position: fixed;
   top: calc(2 * var(--hamburger-height) + var(--hamburger-margin));
@@ -204,13 +211,13 @@ pre {
   position: absolute;
   top: 0;
   text-align: right;
-  padding: 1em 1.5em;
+  padding: 1rem 1.5rem;
 }
 
 .github-link img {
-  height: 1em;
+  height: 1rem;
 }
 
 .github-link a {
-  font-size: 1.5em;
+  font-size: 1.5rem;
 }
