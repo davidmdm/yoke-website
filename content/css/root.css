@@ -4,18 +4,26 @@
   box-sizing: border-box;
 }
 
-/* Set a modern background color and font for the entire page */
-body {
+:root {
   --text-color: #ece9e9;
   --pop-color: #6ad7e5;
-  --background--color: #070936;
+  --background-color: #070936;
 
-  --body-x-margin: 120px;
   --body-y-margin: 20px;
 
+  @media (min-width: 700px) {
+    --body-x-margin: 120px;
+  }
+  @media (max-width: 699px) {
+    --body-x-margin: auto;
+  }
+}
+
+/* Set a modern background color and font for the entire page */
+body {
   font-family: Arial, sans-serif;
 
-  background-color: var(--background--color);
+  background-color: var(--background-color);
   color: var(--text-color);
 
   margin: var(--body-y-margin) var(--body-x-margin);
@@ -106,7 +114,7 @@ p + p {
   min-width: 400px;
   margin: 1.5rem auto;
   padding: 1rem 2.5rem;
-  background-color: #fbaf51;
+  background-color: #f7b767;
   color: black;
 }
 
@@ -201,6 +209,13 @@ pre {
 
   display: flex;
   flex-direction: column;
+
+  border-radius: 0.5em;
+  padding: 0.5em;
+
+  @media (max-width: 699px) {
+    background-color: var(--background-color);
+  }
 }
 
 .hamburger-menu:has(input:checked) + aside {
