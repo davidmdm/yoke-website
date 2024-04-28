@@ -12,7 +12,7 @@ import (
 	"github.com/davidmdm/x/xcontext"
 )
 
-//go:embed content
+//go:embed docs
 var content embed.FS
 
 type KnownPages struct {
@@ -22,9 +22,9 @@ type KnownPages struct {
 }
 
 var knownPages = KnownPages{
-	Home:          Must2(content.ReadFile("content/pages/home.html")),
-	NotFound:      Must2(content.ReadFile("content/pages/not_found.html")),
-	InternalError: Must2(content.ReadFile("content/pages/internal_error.html")),
+	Home:          Must2(content.ReadFile("docs/pages/home.html")),
+	NotFound:      Must2(content.ReadFile("docs/pages/not_found.html")),
+	InternalError: Must2(content.ReadFile("docs/pages/internal_error.html")),
 }
 
 func main() {

@@ -4,10 +4,8 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <link href="/content/css/root.css" rel="stylesheet" />
-    <title>
-      Yoke
-    </title>
+    <link href="/docs/css/root.css" rel="stylesheet" />
+    <title>Yoke</title>
   </head>
   <body>
     <label class="hamburger-menu">
@@ -16,143 +14,98 @@
     <aside class="side-panel">
       <nav>
         <div>
-          <a href="/">
-            home
-          </a>
+          <a href="/"> home </a>
         </div>
         <hr />
         <div>
-          <a href="/content/pages/concepts.html">
-            concepts
-          </a>
+          <a href="/docs/pages/concepts.html"> concepts </a>
         </div>
         <hr />
         <div>
-          <a href="/content/pages/cli.html">
-            CLI reference
-          </a>
+          <a href="/docs/pages/cli.html"> CLI reference </a>
         </div>
         <hr />
         <div>
-          <a href="/content/pages/examples.html">
-            examples
-          </a>
+          <a href="/docs/pages/examples.html"> examples </a>
         </div>
         <hr />
         <div>
-          <a href="/content/pages/helm_compatibility.html">
-            helm compatibility
-          </a>
+          <a href="/docs/pages/helm_compatibility.html"> helm compatibility </a>
         </div>
         <hr />
         <div>
-          <a href="/content/pages/yokecd.html">
-            yokeCD
-          </a>
+          <a href="/docs/pages/yokecd.html"> yokeCD </a>
         </div>
       </nav>
     </aside>
     <div class="github-link">
-      <img src="/content/images/github-mark-white.svg" />
-      <a href="https://github.com/davidmdm/yoke">
-        yoke
-      </a>
+      <img src="/docs/images/github-mark-white.svg" />
+      <a href="https://github.com/davidmdm/yoke"> yoke </a>
     </div>
     <main>
       <h1>
         YokeCD
-        <span style="font-size: 0.5em; color: white">
-          alpha
-        </span>
+        <span style="font-size: 0.5em; color: white"> alpha </span>
       </h1>
       <section class="container">
-        <h2>
-          GitOps: Yoke & ArgoCD
-        </h2>
+        <h2>GitOps: Yoke & ArgoCD</h2>
         <p>
-          The Yoke CLI is analogous to the Helm CLI. It is a client-side tool that communicates with your cluster and keeps
-          track of packages deployed to it. However, for many, that is not how we deploy packages anymore. Where the words
-          <em>
-            Platform Engineering
-          </em>
+          The Yoke CLI is analogous to the Helm CLI. It is a client-side tool that communicates with your cluster and
+          keeps track of packages deployed to it. However, for many, that is not how we deploy packages anymore. Where
+          the words
+          <em> Platform Engineering </em>
           are uttered,
-          <em>
-            GitOps
-          </em>
+          <em> GitOps </em>
           is sure to follow.
         </p>
         <p>
-          To that end, we want to be able to write our Flights (programs that encapsulate a set of kubernetes packages as
-          code) and have a continuous deployment tool, such as ArgoCD, manage our resources for us. Out of the box, ArgoCD
-          supports Helm, Jsonnet, and Kustomize. To support more use cases, it accepts extensions via
-          <a href="https://argo-cd.readthedocs.io/en/stable/operator-manual/config-management-plugins"
-      >
+          To that end, we want to be able to write our Flights (programs that encapsulate a set of kubernetes packages
+          as code) and have a continuous deployment tool, such as ArgoCD, manage our resources for us. Out of the box,
+          ArgoCD supports Helm, Jsonnet, and Kustomize. To support more use cases, it accepts extensions via
+          <a href="https://argo-cd.readthedocs.io/en/stable/operator-manual/config-management-plugins">
             config management plugins
-          </a
-    >
+          </a>
           .
         </p>
         <p>
-          YokeCD is the official yoke config management plugin for ArgoCD. It allows you to write ArgoCD Applications but have
-          their source evaluated by yoke's embedded wasm interpreter (wazero). The
-          <strong>
-            yokecd plugin
-          </strong>
-          supports a
-          variety of setups:
+          YokeCD is the official yoke config management plugin for ArgoCD. It allows you to write ArgoCD Applications
+          but have their source evaluated by yoke's embedded wasm interpreter (wazero). The
+          <strong> yokecd plugin </strong>
+          supports a variety of setups:
         </p>
         <ul>
-          <li>
-            Invoke a local wasm binary found in the application's source.
-          </li>
-          <li>
-            Invoke a remote wasm binary downloaded from a http/https url.
-          </li>
-          <li>
-            Compile an application's source on the fly and evaluate it using the Go Toolchain.
-          </li>
+          <li>Invoke a local wasm binary found in the application's source.</li>
+          <li>Invoke a remote wasm binary downloaded from a http/https url.</li>
+          <li>Compile an application's source on the fly and evaluate it using the Go Toolchain.</li>
           <li>
             Configure any invocation of the binary with flags and standard input defined in the plugin's definition.
           </li>
         </ul>
       </section>
       <section class="container">
-        <h2>
-          Introducing YokeCD
-        </h2>
+        <h2>Introducing YokeCD</h2>
         <p>
           To be compatible with ArgoCD, Yoke offers an ArgoCD CPM Sidecar Docker image hosted at
-          <a href="https://hub.docker.com/repository/docker/davidmdm/yokecd/general">
-            DockerHub - davidmdm/yokecd
-          </a>
+          <a href="https://hub.docker.com/repository/docker/davidmdm/yokecd/general"> DockerHub - davidmdm/yokecd </a>
           .
         </p>
       </section>
       <section class="container">
-        <h2>
-          Installing YokeCD Sidecar
-        </h2>
-        <h3>
-          Fresh ArgoCD Installation
-        </h3>
+        <h2>Installing YokeCD Sidecar</h2>
+        <h3>Fresh ArgoCD Installation</h3>
         <p>
           The yoke project maintains a Flight that wraps the
-          <a href="https://github.com/argoproj/argo-helm/releases/tag/argo-cd-6.7.12">
-            ArgoCD Chart v6.17.2
-          </a>
-          . Any input
-          passed to the flight via stdin is directly passed to the ArgoCD Chart. Additionally the Flight installs the sidecar
-          on the argocd-repo-server making the yokecd plugin available to argocd applications.
+          <a href="https://github.com/argoproj/argo-helm/releases/tag/argo-cd-6.7.12"> ArgoCD Chart v6.17.2 </a>
+          . Any input passed to the flight via stdin is directly passed to the ArgoCD Chart. Additionally the Flight
+          installs the sidecar on the argocd-repo-server making the yokecd plugin available to argocd applications.
         </p>
         <pre>
     <code class="language-bash">yoke takeoff --namespace argocd yokecd https://github.com/davidmdm/yoke/releases/download/yokecd-installer%2Fv0.0.2/yokecd-installer.wasm.gz</code>
   </pre>
-        <h3>
-          Patch an Existing ArgoCD Installation
-        </h3>
+        <h3>Patch an Existing ArgoCD Installation</h3>
         <p>
-          If you already have an existing ArgoCD installating you must patch the argocd-repo-server with the yokecd sidecar
-          image. To do so create the following manifest substituting any names to match your deployment:
+          If you already have an existing ArgoCD installating you must patch the argocd-repo-server with the yokecd
+          sidecar image. To do so create the following manifest substituting any names to match your deployment:
         </p>
         <pre><code class="language-yaml">apiVersion: apps/v1
 kind: Deployment
@@ -182,27 +135,19 @@ spec:
         - name: cmp-tmp
           emptyDir: {}</code></pre>
         <p>
-          Once your file is created, let's call it `patch.yaml`, we can now proceed to patch the existing argocd deployment.
-          We will assumed in the following command that the argocd repo server deployment has name
-          <strong>
-            argocd-repo-server
-          </strong>
-          as per the standard installation. If this is not the case for your installation
-          please substitute the name accordingly. We will also assume that ArgoCD is deployed in a namespace named
-          <strong>
-            argocd
-          </strong>
+          Once your file is created, let's call it `patch.yaml`, we can now proceed to patch the existing argocd
+          deployment. We will assumed in the following command that the argocd repo server deployment has name
+          <strong> argocd-repo-server </strong>
+          as per the standard installation. If this is not the case for your installation please substitute the name
+          accordingly. We will also assume that ArgoCD is deployed in a namespace named
+          <strong> argocd </strong>
           , if this is not the case please substitute accordingly once more.
         </p>
         <pre><code class="language-bash">kubectl patch deployments/argocd-repo-server --namespace=argocd --patch-file=patch.yaml</code></pre>
       </section>
       <section class="container">
-        <h2>
-          Creating YokeCD Applications
-        </h2>
-        <p>
-          YokeCD applications are normal ArgoCD Applications that use the yokecd plugin.
-        </p>
+        <h2>Creating YokeCD Applications</h2>
+        <p>YokeCD applications are normal ArgoCD Applications that use the yokecd plugin.</p>
         <pre><code class="language-yaml">apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
@@ -214,78 +159,45 @@ spec:
     plugin:
       name: yokecd
 # ... and all other required fields</code></pre>
-        <h3>
-          Parameters
-        </h3>
+        <h3>Parameters</h3>
         <p>
-          In order to use and configure the plugin, we must pass parameters to it. The following parameters are supported:
+          In order to use and configure the plugin, we must pass parameters to it. The following parameters are
+          supported:
         </p>
         <div class="table">
           <div>
-            <strong>
-              Parameter
-            </strong>
+            <strong> Parameter </strong>
           </div>
           <div>
-            <strong>
-              Type
-            </strong>
+            <strong> Type </strong>
           </div>
           <div>
-            <strong>
-              Description
-            </strong>
+            <strong> Description </strong>
           </div>
+          <div>wasm</div>
+          <div>string</div>
           <div>
-            wasm
-          </div>
-          <div>
-            string
-          </div>
-          <div>
-            The url to download or the relative location in the source repository to the Flight's wasm asset. Cannot be used
-            when parameter
-            <strong>
-              build
-            </strong>
+            The url to download or the relative location in the source repository to the Flight's wasm asset. Cannot be
+            used when parameter
+            <strong> build </strong>
             is enabled.
           </div>
+          <div>build</div>
+          <div>string</div>
           <div>
-            build
+            A boolean string signalling that the wasm should be compiled on the fly by yokecd using the Go Toolchain in
+            the context of the Application's source. Cannot be used with parameter
+            <strong> wasm </strong>
           </div>
-          <div>
-            string
-          </div>
-          <div>
-            A boolean string signalling that the wasm should be compiled on the fly by yokecd using the Go Toolchain in the
-            context of the Application's source. Cannot be used with parameter
-            <strong>
-              wasm
-            </strong>
-          </div>
-          <div>
-            input
-          </div>
-          <div>
-            string
-          </div>
-          <div>
-            The input that will be passed as stdin to the wasm executable upon execution
-          </div>
-          <div>
-            args
-          </div>
-          <div>
-            []string
-          </div>
-          <div>
-            The args that will be passed to the Flight Executable upon execution
-          </div>
+          <div>input</div>
+          <div>string</div>
+          <div>The input that will be passed as stdin to the wasm executable upon execution</div>
+          <div>args</div>
+          <div>[]string</div>
+          <div>The args that will be passed to the Flight Executable upon execution</div>
         </div>
         <p>
-          <strong>
-            One of build or wasm must be specified.
-          </strong>
+          <strong> One of build or wasm must be specified. </strong>
         </p>
         <pre><code class="language-yaml">apiVersion: argoproj.io/v1alpha1
 kind: Application
@@ -335,23 +247,17 @@ spec:
       selfHeal: true</code></pre>
       </section>
       <section class="container">
-        <h2>
-          YokeCD Service Catalog
-        </h2>
+        <h2>YokeCD Service Catalog</h2>
         <p>
-          When using ArgoCD, it is common to use the app of apps pattern, and have a root application watch a repository for
-          more applications. Any repository that contains Flight programs can deploy them with ArgoCD via the
-          <strong>
-            yokecd plugin
-          </strong>
+          When using ArgoCD, it is common to use the app of apps pattern, and have a root application watch a repository
+          for more applications. Any repository that contains Flight programs can deploy them with ArgoCD via the
+          <strong> yokecd plugin </strong>
           .
         </p>
         <p>
-          The following is an example structure of a service catalog with two releases: alpha and beta. Both releases are
-          described as Go programs and contain an ArgoCD Application manifest that would use the
-          <strong>
-            yokecd plugin with build parameter
-          </strong>
+          The following is an example structure of a service catalog with two releases: alpha and beta. Both releases
+          are described as Go programs and contain an ArgoCD Application manifest that would use the
+          <strong> yokecd plugin with build parameter </strong>
           .
         </p>
         <pre><code class="language-bash">services
@@ -365,13 +271,14 @@ spec:
 └── go.sum
 </code></pre>
         <p>
-          Other setups are possible, and any service repository can be mixed and matched with regular ArgoCD Applications.
+          Other setups are possible, and any service repository can be mixed and matched with regular ArgoCD
+          Applications.
         </p>
       </section>
     </main>
     <footer></footer>
   </body>
-  <link href="/content/css/prism-vsc-dark.css" rel="stylesheet" />
+  <link href="/docs/css/prism-vsc-dark.css" rel="stylesheet" />
   <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-go.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js"></script>

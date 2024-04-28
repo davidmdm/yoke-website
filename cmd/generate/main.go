@@ -21,8 +21,8 @@ func main() {
 }
 
 func run() error {
-	contentDir := flag.String("content", "./content", "path to content directory")
-	outputDir := flag.String("output", "./cmd/server/content", "path to output directory")
+	contentDir := flag.String("content", "./src", "path to content directory")
+	outputDir := flag.String("output", "./cmd/server/docs", "path to output directory")
 
 	flag.Parse()
 

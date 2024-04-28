@@ -5,9 +5,9 @@ tasks:
     cmds:
       - |
         go run ./cmd/watch \
-          -d content,cmd/server \
+          -d src,cmd/server \
           -e go,html,css \
-          -x 'kill $(lsof -t -i :8080) 2>&1 > /dev/null || true && go run ./cmd/generate && go run ./cmd/server'
+          -x 'kill $(lsof -t -i :8080) 2>&1 > /dev/null || true && go run ./cmd/generate -output ./cmd/server/docs && go run ./cmd/server'
 
   deploy:
     - go run ./cmd/generate

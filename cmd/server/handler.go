@@ -21,7 +21,7 @@ func Handler() http.Handler {
 		w.Write(knownPages.Home)
 	})
 
-	mux.HandleFunc("GET /content/", func() http.HandlerFunc {
+	mux.HandleFunc("GET /docs/", func() http.HandlerFunc {
 		return func(w http.ResponseWriter, r *http.Request) {
 			content, err := content.ReadFile(r.URL.Path[1:])
 			if err != nil {
