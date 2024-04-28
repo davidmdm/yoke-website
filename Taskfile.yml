@@ -9,6 +9,11 @@ tasks:
           -e go,html,css \
           -x 'kill $(lsof -t -i :8080) 2>&1 > /dev/null || true && go run ./cmd/generate -output ./cmd/server/docs && go run ./cmd/server'
 
+  gen:
+    cmds:
+      - rm -rf ./docs
+      - go run ./cmd/generate -output docs
+
   deploy:
     - go run ./cmd/generate
     - GOOS=linux GOARCH=amd64 go build -o server ./cmd/server
