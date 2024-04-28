@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <link href="/content/css/root.css" rel="stylesheet" />
+    <title>
+      Yoke
+    </title>
+  </head>
+  <body>
+    <label class="hamburger-menu">
+      <input type="checkbox" />
+    </label>
+    <aside class="side-panel">
+      <nav>
+        <div>
+          <a href="/">
+            home
+          </a>
+        </div>
+        <hr />
+        <div>
+          <a href="/content/pages/concepts.html">
+            concepts
+          </a>
+        </div>
+        <hr />
+        <div>
+          <a href="/content/pages/cli.html">
+            CLI reference
+          </a>
+        </div>
+        <hr />
+        <div>
+          <a href="/content/pages/examples.html">
+            examples
+          </a>
+        </div>
+        <hr />
+        <div>
+          <a href="/content/pages/helm_compatibility.html">
+            helm compatibility
+          </a>
+        </div>
+        <hr />
+        <div>
+          <a href="/content/pages/yokecd.html">
+            yokeCD
+          </a>
+        </div>
+      </nav>
+    </aside>
+    <div class="github-link">
+      <img src="/content/images/github-mark-white.svg" />
+      <a href="https://github.com/davidmdm/yoke">
+        yoke
+      </a>
+    </div>
+    <main>
+      <style>
+        .code {
+        background-color: #1e1e1e;
+        color: white;
+        font-size: 1.3em;
+        }
+
+        .yellow {
+        color: yellow;
+        }
+
+        .cyan {
+        color: cyan;
+        }
+      </style>
+      <h1>
+        CLI Reference
+      </h1>
+      <section class="container">
+        <h2>
+          Yoke
+        </h2>
+        <pre class="code"><code><span class="yellow">yoke</span>
+
+<span class="cyan">What is it?</span>
+yoke is a helm inspired infrastructure-as-code (IaC) package deployer.
+
+<span class="cyan">What does it do?</span>
+Deploys "yoke flights" to a kubernetes cluster.
+
+<span class="cyan">Available commands:</span>
+takeoff   (aliases: up, apply)
+descent   (aliases: down, restore)
+mayday    (aliases: delete)
+blackbox  (aliases: inspect)
+version
+
+<span class="cyan">Global Flags</span>
+  -kubeconfig string
+        path to kube config
+  -verbose
+        verbose output mode</code></pre>
+      </section>
+      <section class="container">
+        <h2>
+          Takeoff
+        </h2>
+        <pre class="code"><code><span class="yellow">yoke takeoff</span>
+
+<span class="cyan">Usage:</span>
+  yoke takeoff [flags] &lt;release-name&gt; &lt;flight-path&gt;
+
+<span class="cyan">Aliases:</span>
+  apply, up
+
+<span class="cyan">Examples:</span>
+  # deploy a local flight
+  yoke takeoff my-release ./main.wasm
+
+  # gzipped wasm files are supported
+  yoke takeoff my-release ./main.wasm.gz
+
+  # deploy a remote flight
+  yoke takeoff my-release https://github.com/my_org/infra/releases/v1.2.3-release.wasm
+
+  # deploy passing arguments to the flight
+  yoke takeoff my-release ./main.wasm -- -env prod
+
+  # deploy passing data over stdin to the flight
+  yoke takeoff my-release ./main.wasm &lt; input.file
+
+  # omit the wasm asset and stdin is interpreted as the desired output of your flight
+  yoke takeoff my-release &lt; resources.json
+
+  # deploy resources from a unix pipe
+  generate-resources.sh | yoke takeoff my-releae
+
+<span class="cyan">Flags:</span>
+  -force-conflicts
+        force apply changes on field manager conflicts
+  -kubeconfig string
+        path to kube config
+  -namespace string
+        preferred namespace for resources if they do not define one (default "default")
+  -out string
+        if present outputs flight resources to directory specified, if out is - outputs to standard out
+  -skip-dry-run
+        disables running dry run to resources before applying them
+  -test-run
+        test-run executes the underlying wasm and outputs it to stdout but does not apply any resources to the cluster
+  -verbose
+        verbose output mode</code></pre>
+      </section>
+      <section class="container">
+        <h2>
+          Descent
+        </h2>
+        <pre class="code"><code><span class="yellow">yoke descent</span>
+
+<span class="cyan">Usage:</span>
+  yoke decent [flags] &lt;release-name&gt; &lt;revision-id&gt;
+
+<span class="cyan">Aliases:</span>
+  down, restore
+
+<span class="cyan">Examples:</span>
+  # restore state to revision history 42
+  yoke descent my-release 42
+
+<span class="cyan">Flags:</span>
+  -kubeconfig string
+        path to kube config
+  -verbose
+        verbose output mode</code></pre>
+      </section>
+      <section class="container">
+        <h2>
+          Mayday
+        </h2>
+        <pre class="code"><code><span class="yellow">yoke mayday</span>
+
+<span class="cyan">Usage:</span>
+  yoke mayday [flags] &lt;release&gt;
+
+<span class="cyan">Aliases:</span>
+  delete
+
+<span class="cyan">Examples:</span>
+  # delete a release and all its revision history
+  yoke mayday foo
+
+<span class="cyan">Flags:</span>
+  -kubeconfig string
+        path to kube config
+  -verbose
+        verbose output mode</code></pre>
+      </section>
+      <section class="container">
+        <h2>
+          Blackbox
+        </h2>
+        <pre class="code"><code><span class="yellow">yoke blackbox</span>
+
+<span class="cyan">Usage:</span>
+  yoke blackbox [flags] [release] [revision-id] [revision-id-to-compare]
+
+<span class="cyan">Aliases:</span>
+  inspect
+
+<span class="cyan">Examples:</span>
+  # get an overview of all releases and their current revision id
+  yoke blackbox
+
+  # get an overview of all revisions for a given release
+  yoke blackbox release
+
+  # render the resources for specific revision
+  yoke blackbox release 42
+
+  # show list of resources by release
+  yoke blackbox --mapping
+
+<span class="cyan">Flags:</span>
+  -context int
+        number of lines of context in diff (ignored if not comparing revisions) (default 4)
+  -kubeconfig string
+        path to kube config
+  -mapping
+        print release to resource mappings. If present ignores all other args
+  -verbose
+        verbose output mode</code></pre>
+      </section>
+    </main>
+    <footer></footer>
+  </body>
+  <link href="/content/css/prism-vsc-dark.css" rel="stylesheet" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-go.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-yaml.min.js"></script>
+  <script type="module">
+    Prism?.highlightAll();
+  </script>
+</html>

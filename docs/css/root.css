@@ -1,0 +1,244 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+:root {
+  --text-color: #ece9e9;
+  --pop-color: #6ad7e5;
+  --background-color: #070936;
+
+  --body-y-margin: 20px;
+}
+
+@media (min-width: 700px) {
+  :root {
+    --body-x-margin: 120px;
+  }
+}
+@media (max-width: 699px) {
+  :root {
+    --body-x-margin: auto;
+  }
+}
+
+/* Set a modern background color and font for the entire page */
+body {
+  font-family: Arial, sans-serif;
+
+  background-color: var(--background-color);
+  color: var(--text-color);
+
+  margin: var(--body-y-margin) var(--body-x-margin);
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+main {
+  padding: 2rem 2.5rem;
+}
+
+main,
+div,
+section {
+  width: 100%;
+}
+
+.pre-list {
+  margin-bottom: 0;
+}
+
+ul {
+  margin-top: 0;
+  li {
+    font-size: 1.2rem;
+  }
+}
+
+ul li {
+  margin-top: 0.5rem;
+}
+
+h1 {
+  font-size: 2.5rem;
+  color: var(--pop-color);
+  text-align: left;
+}
+
+h3 {
+  text-decoration: underline;
+}
+
+a {
+  color: var(--pop-color);
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+a:hover {
+  color: #ff6600d4;
+}
+
+.table {
+  padding: 0.7rem;
+  background-color: #a1d1cb;
+  border-radius: 0.4rem;
+
+  display: grid;
+  grid-template-columns: max-content max-content auto;
+
+  div {
+    padding: 0.3rem 1rem;
+    border-bottom: 1px solid black;
+  }
+}
+
+/* Style paragraphs */
+p {
+  font-size: 1.2rem;
+  line-height: 1.5;
+  margin: 20px 0;
+
+  text-align: left;
+}
+
+/* Add some spacing between paragraphs */
+p + p {
+  margin-top: 10px;
+}
+
+/* Add a modern container for your content */
+.container {
+  border-radius: 12px;
+  justify-content: left;
+  min-width: 400px;
+  margin: 1.5rem auto;
+  padding: 1rem 2.5rem;
+  background-color: #f7b767;
+  color: black;
+}
+
+.container a {
+  color: #8405a6;
+}
+
+.container a:hover {
+  color: rgb(0, 140, 255);
+}
+
+pre {
+  border-radius: 0.4rem;
+}
+
+:root {
+  --hamburger-bar-width: 30px;
+  --hamburger-bar-height: 3px;
+  --hamburger-gap: 6px;
+  --hamburger-margin: 1rem;
+  --hamburger-height: calc(3 * var(--hamburger-bar-height) + 2 * var(--hamburger-gap));
+  --hamburger-timing: 200ms ease-in-out;
+}
+
+.hamburger-menu {
+  --x-width: calc(var(--hamburger-height) * 1.41421356237);
+
+  position: fixed;
+  top: var(--hamburger-margin);
+  left: var(--hamburger-margin);
+
+  width: max-content;
+  z-index: 5;
+  display: flex;
+  flex-direction: column;
+  gap: var(--hamburger-gap);
+  cursor: pointer;
+}
+
+.hamburger-menu::before,
+.hamburger-menu::after,
+.hamburger-menu input {
+  content: "";
+  color: white;
+  width: var(--hamburger-bar-width);
+  height: var(--hamburger-bar-height);
+  background-color: white;
+  border-radius: 999px;
+  transform-origin: left center;
+  transition: opacity var(--hamburger-timing), width var(--hamburger-timing), rotate var(--hamburger-timing),
+    translate var(--hamburger-timing);
+}
+
+.hamburger-menu input {
+  appearance: none;
+  padding: 0;
+  margin: 0;
+  outline: none;
+  pointer-events: none;
+}
+
+.hamburger-menu input:checked {
+  opacity: 0;
+  width: 0;
+}
+
+.hamburger-menu:has(input:checked)::before {
+  rotate: 45deg;
+  width: var(--x-width);
+  translate: 0 calc(var(--hamburger-bar-height) / -2);
+}
+
+.hamburger-menu:has(input:checked)::after {
+  rotate: -45deg;
+  width: var(--x-width);
+  translate: 0 calc(var(--hamburger-bar-height) / 2);
+}
+
+.side-panel {
+  width: max-content;
+  max-width: var(--body-x-margin);
+  padding-left: 10px;
+
+  transition: translate var(--hamburger-timing);
+  translate: -100%;
+
+  font-size: 1.2rem;
+
+  position: fixed;
+  top: calc(2 * var(--hamburger-height) + var(--hamburger-margin));
+  left: 0;
+
+  display: flex;
+  flex-direction: column;
+
+  border-radius: 0.5em;
+  padding: 0.5em;
+}
+
+@media (max-width: 699px) {
+  .side-panel {
+    background-color: var(--background-color);
+  }
+}
+
+.hamburger-menu:has(input:checked) + aside {
+  translate: 0;
+}
+
+.github-link {
+  position: absolute;
+  top: 0;
+  text-align: right;
+  padding: 1rem 1.5rem;
+}
+
+.github-link img {
+  height: 1rem;
+}
+
+.github-link a {
+  font-size: 1.5rem;
+}
