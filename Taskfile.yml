@@ -14,17 +14,6 @@ tasks:
       - rm -rf ./docs
       - go run ./cmd/generate -output docs
 
-  deploy:
-    - go run ./cmd/generate
-    - GOOS=linux GOARCH=amd64 go build -o server ./cmd/server
-    - |
-      ssh root@172.105.109.242 "lsof -t -i :80" && \
-      ssh root@172.105.109.242 kill $(ssh root@172.105.109.242 "lsof -t -i :80") || true
-
-    - scp -i ~/.ssh/id_ed25519 ./server root@172.105.109.242:/root/website
-    - rm ./server
-    - ssh root@172.105.109.242 "PORT=80 /root/website >> logs.txt &"
-
   # Ironically the task runner is itself a dev dependency of the project.
   # To install it run the following command:
   #
