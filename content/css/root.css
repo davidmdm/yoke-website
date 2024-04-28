@@ -10,11 +10,15 @@
   --background-color: #070936;
 
   --body-y-margin: 20px;
+}
 
-  @media (min-width: 700px) {
+@media (min-width: 700px) {
+  :root {
     --body-x-margin: 120px;
   }
-  @media (max-width: 699px) {
+}
+@media (max-width: 699px) {
+  :root {
     --body-x-margin: auto;
   }
 }
@@ -212,8 +216,10 @@ pre {
 
   border-radius: 0.5em;
   padding: 0.5em;
+}
 
-  @media (max-width: 699px) {
+@media (max-width: 699px) {
+  .side-panel {
     background-color: var(--background-color);
   }
 }
