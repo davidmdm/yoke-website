@@ -22,7 +22,7 @@ type KnownPages struct {
 }
 
 var knownPages = KnownPages{
-	Home:          Must2(content.ReadFile("docs/pages/home.html")),
+	Home:          Must2(content.ReadFile("docs/index.html")),
 	NotFound:      Must2(content.ReadFile("docs/pages/not_found.html")),
 	InternalError: Must2(content.ReadFile("docs/pages/internal_error.html")),
 }
