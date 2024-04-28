@@ -9,11 +9,11 @@ require (
 	github.com/davidmdm/x/xcontext v0.0.2
 	github.com/fsnotify/fsnotify v1.7.0
 	github.com/yosssi/gohtml v0.0.0-20201013000340-ee4748c638f4
-	golang.org/x/net v0.22.0
+	golang.org/x/net v0.24.0
 )
 
 require (
 	github.com/davidmdm/x/xerr v0.0.3 // indirect
-	golang.org/x/sys v0.18.0 // indirect
+	golang.org/x/sys v0.19.0 // indirect
 	golang.org/x/text v0.14.0 // indirect
 )
