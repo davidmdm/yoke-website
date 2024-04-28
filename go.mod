@@ -2,6 +2,8 @@ module github.com/davidmdm/yoke-website
 
 go 1.22.0
 
+toolchain go1.22.2
+
 require (
 	github.com/davidmdm/ansi v0.0.6
 	github.com/davidmdm/conf v0.0.7
