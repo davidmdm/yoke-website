@@ -78,7 +78,7 @@
         <h3>
           Deploy your first package
         </h3>
-        <pre><code class="language-bash">yoke takeoff my-release https://my-domain.com/example.v1.wasm</code></pre>
+        <pre><code class="language-bash">yoke takeoff my-release https://my-domain.com/example/v1/main.wasm.gz</code></pre>
         <h3>
           Visit the core docs
         </h3>
@@ -93,6 +93,11 @@
               examples
             </a>
           </li>
+          <li>
+            <a href="/yoke-website/pages/yokecd.html">
+              integrate with ArgoCD
+            </a>
+          </li>
         </ul>
       </section>
       <section class="container">
@@ -100,14 +105,17 @@
           What is Yoke?
         </h2>
         <p>
-          Yoke is a Kubernetes package manager that facilitates the downloading and deployment of packages to Kubernetes. The
-          primary distinction between Yoke and other Kubernetes package managers, such as Helm and Timoni, lies in how Yoke
-          describes
+          Yoke is a Kubernetes package manager that facilitates the downloading and deployment of packages to Kubernetes.
+        </p>
+        <p>
+          The primary distinction between Yoke and other Kubernetes package managers, such as Helm and Timoni, lies in how
+          Yoke describes packages. In the context of yoke packages are called
           <strong>
             Flights
           </strong>
-          (Flights are to Yoke what Charts are to Helm). Unlike Helm and Timoni, where
-          Packages are defined using YAML, CUE, or nother data/configuration languages,
+          (Flights are to Yoke
+          what Charts are to Helm). Unlike Helm and Timoni, where Packages are defined using YAML, CUE, or other
+          data/configuration languages,
           <strong>
             yoke utilizes general-purpose code to describe kubernetes packages
           </strong>
@@ -123,17 +131,22 @@
     >
           . Flights are typically packaged as
           <strong>
-            WebAssembly (wasm) executables
+            <a href="/yoke-website/pages/concepts.html#why-wasm">
+              WebAssembly (wasm) executables
+            </a>
           </strong>
-          , with Yoke embedding Wazero, a
-          zero-dependency wasm runtime for Go, to execute these programs.
+          , with Yoke
+          embedding Wazero, a zero-dependency wasm runtime for Go, to execute these programs.
         </p>
         <p>
-          Creating reusable building blocks for yoke is akin to writing functions or libraries. These components can be
-          distributed and versioned using the respective language's ecosystem package manager, such as npm, cargo, or Go
-          modules. Any language that compiles to wasm enjoys first-class support in Yoke. If your chosen language does not
-          compile to wasm, you can still invoke the program and pipe the output directly to Yoke. However, this approach comes
-          with certain drawbacks, including potential issues related to portability and security.
+          Sharing packages is the same as sharing code. Package components can be distributed and versioned using the
+          respective language's ecosystem package manager, such as npm, cargo, or Go modules.
+          <strong>
+            Any language that compiles to wasm enjoys first-class support in Yoke
+          </strong>
+          . If your chosen language does
+          not compile to wasm, you can still invoke the program and pipe the output directly to Yoke. However, this approach
+          comes with certain drawbacks, including potential issues related to portability and security.
         </p>
       </section>
       <section class="container">
@@ -143,14 +156,18 @@
         <p>
           As the DevOps ecosystem transitions from a focus on DevOps to platform engineering, our tools for interfacing with
           Kubernetes (K8s) must evolve accordingly. Describing Kubernetes resources through text templates represents the
-          minimum standard we have set. However, it is evident that this approach is not tailored for software engineers. It
-          lacks essential features such as proper type safety, compiler guarantees, validation, testing, autocompletion, and
-          consistent IDE support.
+          minimum standard we have set. However, it is evident that this approach is not tailored with software engineering
+          practices in mind. It lacks essential features such as proper type safety, compiler guarantees, validation, testing,
+          autocompletion, and consistent IDE support.
         </p>
         <p>
           The crucial observation to note is that Kubernetes (K8s) resources differ fundamentally from web pages or emails.
           So, why do we use templates as if they were? These files represent diverse APIs supported by Kubernetes; in essence,
-          they are structured data. The most effective tools for handling structured data are programming languages.
+          they are structured data.
+          <strong>
+            The most effective tools for handling structured data are programming languages
+          </strong>
+          .
         </p>
       </section>
     </main>

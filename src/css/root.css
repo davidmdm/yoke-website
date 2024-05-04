@@ -237,9 +237,10 @@ pre {
 }
 
 .github-link img {
-  height: 1rem;
+  height: 1.5em;
+  margin-right: 0.2em;
 }
 
 .github-link a {
-  font-size: 1.5rem;
+  font-size: 1.7em;
 }
