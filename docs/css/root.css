@@ -135,9 +135,9 @@ pre {
 }
 
 :root {
-  --hamburger-bar-width: 30px;
-  --hamburger-bar-height: 3px;
-  --hamburger-gap: 6px;
+  --hamburger-bar-width: 38px;
+  --hamburger-bar-height: 5px;
+  --hamburger-gap: 8px;
   --hamburger-margin: 1rem;
   --hamburger-height: calc(3 * var(--hamburger-bar-height) + 2 * var(--hamburger-gap));
   --hamburger-timing: 200ms ease-in-out;
@@ -198,6 +198,7 @@ pre {
 }
 
 .side-panel {
+  z-index: 100;
   width: max-content;
   max-width: var(--body-x-margin);
   padding-left: 10px;

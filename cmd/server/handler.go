@@ -22,6 +22,11 @@ func Handler() http.Handler {
 		w.Write(knownPages.Home)
 	})
 
+	mux.HandleFunc("GET /yoke-website/{$}", func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "text/html")
+		w.Write(knownPages.Home)
+	})
+
 	mux.HandleFunc("GET /", func() http.HandlerFunc {
 		return func(w http.ResponseWriter, r *http.Request) {
 			content, err := content.ReadFile(path.Join("docs", strings.TrimPrefix(r.URL.Path, "/yoke-website/")))
