@@ -33,15 +33,15 @@
   <p>
     The primary distinction between Yoke and other Kubernetes package managers, such as Helm and Timoni, lies in how
     Yoke describes packages. In the context of yoke packages are called <strong>Flights</strong> (Flights are to Yoke
-    what Charts are to Helm). Unlike Helm and Timoni, where Packages are defined using YAML, CUE, or other
-    data/configuration languages, <strong>yoke utilizes general-purpose code to describe kubernetes packages</strong>.
+    what Charts are to Helm). Unlike Helm and Timoni, which define packages using YAML, CUE, or other data/configuration
+    languages, <strong>yoke utilizes general-purpose code to describe kubernetes packages</strong>.
   </p>
 
   <p>
     With yoke,
     <strong
-      >Flights are programs that generate the desired Kubernetes resources in either JSON or YAML format and output them
-      to stdout</strong
+      >With Yoke, Flights are programs that generate the desired Kubernetes resources in either JSON or YAML format and
+      output them to stdout.</strong
     >. Flights are typically packaged as
     <strong><a href="/yoke-website/pages/concepts.html#why-wasm">WebAssembly (wasm) executables </a></strong>, with Yoke
     embedding Wazero, a zero-dependency wasm runtime for Go, to execute these programs.
@@ -57,18 +57,34 @@
 </section>
 
 <section class="container">
-  <h2>Why Yoke? Why Another Package Manager?</h2>
+  <h2>Why Another Package Manager?</h2>
   <p>
-    As the DevOps ecosystem transitions from a focus on DevOps to platform engineering, our tools for interfacing with
+    As the DevOps ecosystem transitions from platform-operators to platform-engineering, our tools for interfacing with
     Kubernetes (K8s) must evolve accordingly. Describing Kubernetes resources through text templates represents the
-    minimum standard we have set. However, it is evident that this approach is not tailored with software engineering
-    practices in mind. It lacks essential features such as proper type safety, compiler guarantees, validation, testing,
-    autocompletion, and consistent IDE support.
+    minimum standard we have set. It's evident that this approach doesn't align with software engineering practices. It
+    lacks essential features such as proper type safety, compiler guarantees, validation, testing, autocompletion, and
+    consistent IDE support.
   </p>
   <p>
     The crucial observation to note is that Kubernetes (K8s) resources differ fundamentally from web pages or emails.
     So, why do we use templates as if they were? These files represent diverse APIs supported by Kubernetes; in essence,
     they are structured data.
     <strong>The most effective tools for handling structured data are programming languages</strong>.
+  </p>
+  <p>
+    Working with raw yaml manifests for representing Kubernetes APIs is error prone. When we template them we are no
+    longer concerned with the configuration of our resources but instead the rendering of the format of our
+    configuration.
+  </p>
+  <p>
+    New tools like CUE, jsonnette, PKL, and others have emerged to address some of the short comings of raw YAML
+    configuration and templating. Inspiring new K8s package managers such as <a href="https://timoni.sh/">timoni</a>.
+    However it is yoke's stance that these tools will always fall short of the safety, flexibility and power of building
+    your packages from code.
+  </p>
+  <p>
+    With the emergence of a shared cross-platform target for code, WebAssembly (wasm), it is now possible to package and
+    utilize the Kubernetes ecosystem with greater emphasis on type safety, testing, and developer experience than ever
+    before. This is the niche Yoke aims to fill within the K8s Package Management Landscape.
   </p>
 </section>
