@@ -136,13 +136,25 @@
           Fresh ArgoCD Installation
         </h3>
         <p>
-          The yoke project maintains a Flight that wraps the
+          The yoke project maintains a Flight called the
+          <strong>
+            yokecd-installer
+          </strong>
+          that wraps the
           <a href="https://github.com/argoproj/argo-helm/releases/tag/argo-cd-6.7.12">
             ArgoCD Chart v6.17.2
           </a>
-          . Any input
-          passed to the flight via stdin is directly passed to the ArgoCD Chart. Additionally the Flight installs the sidecar
-          on the argocd-repo-server making the yokecd plugin available to argocd applications.
+          . The Flight
+          patches the argocd-repo-server by adding the yokecd sidecar to it, thus rendering the plugin available to argocd
+          applications.
+        </p>
+        <p>
+          To configure the yokecd-installer you can pass a yaml or json document over stdin:
+        </p>
+        <pre><code class="language-yaml">version: 0.0.1 # default is "latest"
+argocd: {} // # values are passed directly to the argocd chart.</code></pre>
+        <p>
+          Ready for takeoff?
         </p>
         <pre><code class="language-bash">yoke takeoff --namespace argocd yokecd https://github.com/davidmdm/yoke/releases/download/yokecd-installer%2Fv0.0.2/yokecd-installer.wasm.gz</code></pre>
         <h3>
@@ -162,7 +174,7 @@ spec:
     spec:
       containers:
         - name: yokecd
-          image: davidmdm/yokecd:latest
+          image: davidmdm/yokecd:latest # or any version you prefer
           imagePullPolicy: IfNotPresent # use the imagePullPolicy that best fits your needs.
           command:
             - /var/run/argocd/argocd-cmp-server
