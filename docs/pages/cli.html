@@ -90,10 +90,11 @@ yoke is a helm inspired infrastructure-as-code (IaC) package deployer.
 Deploys "yoke flights" to a kubernetes cluster.
 
 <span class="cyan">Available commands:</span>
-takeoff   (aliases: up, apply)
-descent   (aliases: down, restore)
-mayday    (aliases: delete)
-blackbox  (aliases: inspect)
+takeoff     (aliases: up, apply)
+descent     (aliases: down, restore)
+mayday      (aliases: delete)
+blackbox    (aliases: inspect)
+turbulence  (aliases: drift)
 version
 
 <span class="cyan">Global Flags</span>
@@ -106,6 +107,10 @@ version
         <h2>
           Takeoff
         </h2>
+        <p>
+          This command applies creates releases or new revisions of releases to your cluster. Release resources can be created
+          from wasm executables or passed directly to takeoff via stdin.
+        </p>
         <pre class="code"><code><span class="yellow">yoke takeoff</span>
 
 <span class="cyan">Usage:</span>
@@ -136,6 +141,9 @@ version
   # deploy resources from a unix pipe
   generate-resources.sh | yoke takeoff my-releae
 
+  # view the diff between would be applied release resources and the current state of the release.
+  yoke takeoff -diff-only my-release main.wasm
+
 <span class="cyan">Flags:</span>
   -force-conflicts
         force apply changes on field manager conflicts
@@ -156,6 +164,11 @@ version
         <h2>
           Descent
         </h2>
+        <p>
+          This command allows you to restore previous revision states. Yoke keeps track of each release's revision history and
+          allows you to rollback to previous versions. This command will cleanup resources from a previous state just as
+          takeoff does when creating new releases.
+        </p>
         <pre class="code"><code><span class="yellow">yoke descent</span>
 
 <span class="cyan">Usage:</span>
@@ -178,6 +191,10 @@ version
         <h2>
           Mayday
         </h2>
+        <p>
+          This command removes a release entirely. It will cleanup all resources in the releases and remove the release. You
+          will not be able to use descent/rollback afterwards. This command is equivalent to a hard delete.
+        </p>
         <pre class="code"><code><span class="yellow">yoke mayday</span>
 
 <span class="cyan">Usage:</span>
@@ -200,6 +217,10 @@ version
         <h2>
           Blackbox
         </h2>
+        <p>
+          This command allows you to inspect your various releases, their revision history, and their diffs. It also allows
+          you to view the release to resource mapping throughout your cluster.
+        </p>
         <pre class="code"><code><span class="yellow">yoke blackbox</span>
 
 <span class="cyan">Usage:</span>
@@ -228,6 +249,53 @@ version
         path to kube config
   -mapping
         print release to resource mappings. If present ignores all other args
+  -verbose
+        verbose output mode</code></pre>
+      </section>
+      <section class="container">
+        <h2>
+          Turbulence
+        </h2>
+        <p>
+          This command is used to view any drift between your desired release state and the state of the cluster. This drift
+          often happens when developers run experiments on state in the cluster via manual edits and forget to clean them up.
+          It works by looking for conflicts between desired and actual state. This limitation means that added state is not
+          removed when turbulence is fixed.
+        </p>
+        <p>
+          An option to do a hard replace will be provided in a future release.
+        </p>
+        <pre class="code"><code><span class="yellow">yoke turbulence</span>
+
+<span class="cyan">Usage:</span>
+  yoke turbulence [flags] &lt;release-name&gt;
+
+<span class="cyan">Aliases:</span>
+  drift
+
+<span class="cyan">Examples:</span>
+  # get the diff between desired state of release foo and the state of the cluster
+  yoke turbulence foo
+
+  # see all diff including state not specified by the release such as defaults, managedFields, resource id annotations
+  yoke turbulence -conflict-only=false foo
+
+  # fix the turbulence and apply desired release state over any drift.
+  yoke turbulence -fix foo
+
+<span class="cyan">Flags:</span>
+  -color
+        outputs diff with color (default true)
+  -conflict-only
+        only show turbulence for declared state.
+        If false, will show diff against state that was not declared;
+        such as server generated annotations, status, defaults and more (default true)
+  -context int
+        number of lines of context in diff (default 4)
+  -fix
+        fix the drift. If present conflict-only will be true.
+  -kubeconfig string
+        path to kube config (default "/Users/davidmdm/.kube/config")
   -verbose
         verbose output mode</code></pre>
       </section>
