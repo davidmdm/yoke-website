@@ -174,64 +174,109 @@ func main() {
           that allows us to build representations of core K8s resources.
           Let's use it to redefine our deployment from the earlier example, and to add a service for it.
         </p>
+        <p>
+          The previous example was as unidiomatic as possible. This time we can breakdown the construction of resources into
+          their own functions and create any signature or contract that we want.
+        </p>
         <pre><code class="language-go">// example.go
 package main
 
 import (
 	"encoding/json"
+	"fmt"
 	"os"
 
-	"k8s.io/apimachinery/pkg/util/intstr"
+	"github.com/davidmdm/yoke/pkg/flight"
 
-	apicore "k8s.io/api/core/v1"
+	v1 "k8s.io/api/core/v1"
+	"k8s.io/apimachinery/pkg/util/intstr"
 	appsv1 "k8s.io/client-go/applyconfigurations/apps/v1"
 	corev1 "k8s.io/client-go/applyconfigurations/core/v1"
 	metav1 "k8s.io/client-go/applyconfigurations/meta/v1"
 )
 
 func main() {
-	appName := "example-app"
+	if err := run(); err != nil {
+		fmt.Fprintln(os.Stderr, err)
+		os.Exit(1)
+	}
+}
 
-	appLabels := map[string]string{"app": appName}
+func run() error {
+	var (
+		release   = flight.Release()   // the first argument passed to yoke takeoff;       ie: yoke takeoff RELEASE foo
+		namespace = flight.Namespace() // the value of the flag namespace during takeoff;  ie: yoke takeoff -namespace NAMESPACE ...
+		labels    = map[string]string{"app": release}
+	)
 
-	deployment := appsv1.Deployment(appName, "").
-		WithLabels(appLabels).
-		WithSpec(
-			appsv1.DeploymentSpec().
-				WithReplicas(2).
-				WithSelector(
-					metav1.LabelSelector().WithMatchLabels(appLabels),
-				).
-				WithTemplate(
-					corev1.PodTemplateSpec().
-						WithLabels(appLabels).
-						WithSpec(
-							corev1.PodSpec().
-								WithContainers(
-									corev1.Container().
-										WithName(appName).
-										WithImage("nginx:latest").
-										WithPorts(corev1.ContainerPort().WithContainerPort(80)),
-								),
-						),
-				),
-		)
+	resources := []any{
+		CreateDeployment(DeploymentConfig{
+			Name:      release,
+			Namespace: namespace,
+			Labels:    labels,
+			Replicas:  2,
+		}),
+		CreateService(ServiceConfig{
+			Name:       release,
+			Namespace:  namespace,
+			Labels:     labels,
+			Port:       80,
+			TargetPort: 80,
+		}),
+	}
 
-	service := corev1.Service(appName, "").
-		WithLabels(appLabels).
-		WithSpec(
-			corev1.ServiceSpec().
-				WithSelector(appLabels).
-				WithType(apicore.ServiceTypeClusterIP).
-				WithPorts(
-					corev1.ServicePort().
-						WithProtocol(apicore.ProtocolTCP).
-						WithPort(80).
-						WithTargetPort(intstr.FromInt(80)),
-				),
-		)
+	return json.NewEncoder(os.Stdout).Encode(resources)
+}
 
-	json.NewEncoder(os.Stdout).Encode([]any{deployment, service})
+type DeploymentConfig struct {
+	Name      string
+	Namespace string
+	Labels    map[string]string
+	Replicas  int32
+}
+
+func CreateDeployment(cfg DeploymentConfig) *appsv1.DeploymentApplyConfiguration {
+	container := corev1.Container().
+		WithName(cfg.Name).
+		WithImage("alpine:latest").
+		WithCommand("watch", "echo", "hello", "world")
+
+	podTemplate := corev1.PodTemplateSpec().
+		WithLabels(cfg.Labels).
+		WithSpec(corev1.PodSpec().WithContainers(container))
+
+	spec := appsv1.DeploymentSpec().
+		WithReplicas(cfg.Replicas).
+		WithSelector(metav1.LabelSelector().WithMatchLabels(cfg.Labels)).
+		WithTemplate(podTemplate)
+
+	return appsv1.Deployment(cfg.Name, cfg.Namespace).
+		WithLabels(cfg.Labels).
+		WithSpec(spec)
+}
+
+type ServiceConfig struct {
+	Name       string
+	Namespace  string
+	Labels     map[string]string
+	Port       int32
+	TargetPort int
+}
+
+func CreateService(cfg ServiceConfig) *corev1.ServiceApplyConfiguration {
+	servicePort := corev1.ServicePort().
+		WithProtocol(v1.ProtocolTCP).
+		WithPort(cfg.Port).
+		WithTargetPort(intstr.FromInt(cfg.TargetPort))
+
+	serviceSpec := corev1.ServiceSpec().
+		WithSelector(cfg.Labels).
+		WithType(v1.ServiceTypeClusterIP).
+		WithPorts(servicePort)
+
+	return corev1.Service(cfg.Name, cfg.Namespace).
+		WithLabels(cfg.Labels).
+		WithSpec(serviceSpec)
 }</code></pre>
         <p>
           Repeating the steps as in the first example, we:
@@ -250,8 +295,8 @@ func main() {
         <p>
           We have created a second revision of our release called example. It contains both a deployment and a service.
           Furthermore, it comes with all the advantages we expect from code. It has type-safety, IntelliSense, and
-          documentation is a click away. It is easy to imaging how we may break things out as a reusable functions, create our
-          own contracts, and write tests.
+          documentation is a click away. We may break things out as a reusable functions, create our own contracts, and write
+          tests. The world is your oyster.
         </p>
         <p>
           In this example, we used the client-go applyconfigurations package to build our resource values. However you may use
