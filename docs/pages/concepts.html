@@ -100,6 +100,48 @@
         </p>
       </section>
       <section class="container">
+        <h2 id="flight-dependencies">
+          Flight Dependencies
+        </h2>
+        <p>
+          Flights are programs that output a list or arbitrary kubernetes resources to be applied as a singular release. There
+          are two types of resources that are not considered to be part of the release but dependencies of the release:
+          Namespaces and Custom Resource Definitions.
+        </p>
+        <p>
+          When your flight contains a custom resource, it can be useful to specify the custom resource defintion to ensure
+          that the cluster will be able to accept your resource. This is more practical than doing it in two staged releases,
+          the prior where we install dependencies, and the latter where we install our desired resources.
+        </p>
+        <p class="pre-list">
+          However this poses problems:
+        </p>
+        <ul>
+          <li>
+            If the flight is deleted, do we delete the CRDs or Namespaces specified in the flight? This may potentially remove
+            resources defined in other flights that use the Namespace or CRD.
+          </li>
+          <li>
+            If the Namespace or CRD already exists, how do we handle release ownership? Aren't they shared resources?
+          </li>
+        </ul>
+        <p>
+          To solve these issues, yoke considers Namespaces and CRDs to be dependencies of the Flight, and does not consider
+          them part of the Flight's resources to be tracked in the revision history. By default, no action is performed and
+          dependencies are simply ignored. When running the takeoff command, we can specify which dependencies we want to
+          apply via the
+          <b>
+            --create-namespaces
+          </b>
+          and
+          <b>
+            --create-crds
+          </b>
+          flags.
+        </p>
+        <pre><code class="language-bash">yoke takeoff --create-namespaces --create-crds foo example.wasm.gz</code></pre>
+      </section>
+      <section class="container">
         <h2 id="why-wasm">
           Why Wasm?
         </h2>
